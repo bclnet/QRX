@@ -1,0 +1,5 @@
+{
+    "_button": {},
+    "text": "Tap Me",
+    "action": { "name": "toast", "args": { "message": "Tapped" } }
+}

@@ -1,0 +1,22 @@
+{
+  "_ui": {
+    "version": 1,
+    "state": { "rating": 3, "recommend": null, "done": false }
+  },
+  "type": "VStack",
+  "spacing": 12,
+  "padding": 16,
+  "background": "white",
+  "cornerRadius": 16,
+  "content": [
+    { "type": "Text", "text": "Rate this exhibit", "font": "headline" },
+    { "type": "Picker", "selection": "$rating", "style": "segmented", "options": [1, 2, 3, 4, 5] },
+    { "type": "HStack", "spacing": 12, "content": [
+      { "type": "Button", "label": "Recommend", "style": "${state.recommend === true ? 'borderedProminent' : 'bordered'}", "action": { "set": { "recommend": true } } },
+      { "type": "Button", "label": "Skip", "style": "${state.recommend === false ? 'borderedProminent' : 'bordered'}", "action": { "set": { "recommend": false } } }
+    ] },
+    { "type": "Button", "label": "Send", "style": "borderedProminent", "disabled": "${state.recommend === null || state.done}",
+      "action": [ { "name": "submitSurvey", "args": { "rating": "$rating", "recommend": "$recommend" } }, { "set": { "done": true } } ] },
+    { "type": "Label", "title": "Thanks!", "systemImage": "checkmark.circle", "foregroundColor": "green", "hidden": "${!state.done}" }
+  ]
+}

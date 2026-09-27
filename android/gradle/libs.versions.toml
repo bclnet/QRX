@@ -1,0 +1,56 @@
+[versions]
+agp = "8.11.1"
+kotlin = "2.2.0"
+serialization = "1.8.0"
+coroutines = "1.10.1"
+composeBom = "2025.02.00"
+activityCompose = "1.10.0"
+lifecycle = "2.8.7"
+camerax = "1.4.2"
+mlkitBarcode = "17.3.0"
+media3 = "1.5.1"
+metaSpatial = "0.14.0"
+junit = "4.13.2"
+androidxJunit = "1.2.1"
+androidxRunner = "1.6.2"
+
+[libraries]
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+camerax-core = { module = "androidx.camera:camera-core", version.ref = "camerax" }
+camerax-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
+camerax-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
+camerax-view = { module = "androidx.camera:camera-view", version.ref = "camerax" }
+mlkit-barcode = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkitBarcode" }
+media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
+media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3" }
+meta-spatial-sdk = { module = "com.meta.spatial:meta-spatial-sdk", version.ref = "metaSpatial" }
+meta-spatial-toolkit = { module = "com.meta.spatial:meta-spatial-sdk-toolkit", version.ref = "metaSpatial" }
+meta-spatial-vr = { module = "com.meta.spatial:meta-spatial-sdk-vr", version.ref = "metaSpatial" }
+meta-spatial-compose = { module = "com.meta.spatial:meta-spatial-sdk-compose", version.ref = "metaSpatial" }
+jsonui-core = { module = "com.bclnet.jsonui:jsonui-core" }
+jsonui-compose = { module = "com.bclnet.jsonui:jsonui-compose" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxRunner" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+meta-spatial = { id = "com.meta.spatial.plugin", version.ref = "metaSpatial" }

@@ -1,0 +1,82 @@
+//
+//  ARGlyphView.swift
+//  QRX
+//
+//  The ARKit scene: runs an image tracking session whose reference images
+//  are the QR codes found by BarcodeDetector, and asks GlyphFactory for a
+//  node when a tracked code appears. Replaces Glyph's storyboard
+//  ViewController.
+//
+
+import SwiftUI
+import ARKit
+import SceneKit
+
+struct ARGlyphView: UIViewRepresentable {
+    @EnvironmentObject private var model: AppModel
+
+    func makeCoordinator() -> Coordinator { Coordinator(model: model) }
+
+    func makeUIView(context: Context) -> ARSCNView {
+        let view = ARSCNView(frame: .zero)
+        view.automaticallyUpdatesLighting = true
+        view.delegate = context.coordinator
+        view.session.delegate = context.coordinator.detector
+        context.coordinator.view = view
+        context.coordinator.factory.parent = view
+        context.coordinator.run(with: [], options: [.resetTracking, .removeExistingAnchors])
+        UIApplication.shared.isIdleTimerDisabled = true
+        return view
+    }
+
+    func updateUIView(_ uiView: ARSCNView, context: Context) {
+        if model.foundGlyphs.isEmpty && !context.coordinator.detector.found.isEmpty {
+            // "Forget" was pressed: restart tracking with no images.
+            context.coordinator.detector.reset()
+            context.coordinator.run(with: [], options: [.resetTracking, .removeExistingAnchors])
+        }
+    }
+
+    static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) {
+        uiView.session.pause()
+        UIApplication.shared.isIdleTimerDisabled = false
+    }
+
+    final class Coordinator: NSObject, ARSCNViewDelegate, BarcodeDetectorDelegate {
+        let model: AppModel
+        let detector = BarcodeDetector()
+        let factory: GlyphFactory
+        weak var view: ARSCNView?
+
+        init(model: AppModel) {
+            self.model = model
+            factory = GlyphFactory(model: model)
+            super.init()
+            detector.delegate = self
+            detector.resolver = { [weak model] barcode, completion in
+                Task { @MainActor in model?.resolve(barcode, completion: completion) }
+            }
+        }
+
+        func run(with images: Set<ARReferenceImage>, options: ARSession.RunOptions = [.removeExistingAnchors]) {
+            let configuration = ARImageTrackingConfiguration()
+            configuration.trackingImages = images
+            configuration.maximumNumberOfTrackedImages = max(1, images.count)
+            view?.session.run(configuration, options: options)
+        }
+
+        func barcodeDetector(_ detector: BarcodeDetector, updated trackingImages: Set<ARReferenceImage>) {
+            DispatchQueue.main.async { self.run(with: trackingImages) }
+        }
+
+        func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+            guard let imageAnchor = anchor as? ARImageAnchor, let result = detector.result(for: imageAnchor.name) else { return nil }
+            return factory.node(for: imageAnchor, result: result)
+        }
+
+        func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+            guard let imageAnchor = anchor as? ARImageAnchor else { return }
+            node.isHidden = !imageAnchor.isTracked
+        }
+    }
+}

@@ -1,0 +1,67 @@
+# XcodeGen spec for the QRX iOS app. Regenerate the project with:
+#   xcodegen generate --spec ios/project.yml
+name: QRX
+options:
+  bundleIdPrefix: net.bcl
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+  createIntermediateGroups: true
+packages:
+  JsonUI:
+    url: https://github.com/bclnet/JsonUI
+    branch: claude/ios-android-form-libraries-2jjfw5
+  QRXCore:
+    path: ..
+targets:
+  QRX:
+    type: application
+    platform: iOS
+    sources:
+      - path: QRX
+      - path: ../examples
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - package: QRXCore
+        product: QRXCore
+      - package: JsonUI
+        product: JsonUI
+      - sdk: ARKit.framework
+      - sdk: CoreBluetooth.framework
+      - sdk: Vision.framework
+      - sdk: WebKit.framework
+      - sdk: AVKit.framework
+    info:
+      path: QRX/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.bcl.qrx
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.9"
+        ENABLE_PREVIEWS: YES
+        DEVELOPMENT_ASSET_PATHS: ""
+        CODE_SIGN_STYLE: Automatic
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+  QRXTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: QRXTests
+    dependencies:
+      - target: QRX
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.bcl.qrx.tests
+schemes:
+  QRX:
+    build:
+      targets:
+        QRX: all
+        QRXTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - QRXTests

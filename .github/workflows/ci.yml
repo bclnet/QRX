@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  swift-core:
+    name: QRXCore (Linux)
+    runs-on: ubuntu-latest
+    container: swift:6.0
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift build
+      - run: swift test
+
+  ios-app:
+    name: iOS app (Xcode)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test
+      - name: Build app for iOS Simulator
+        working-directory: ios
+        run: xcodebuild -project QRX.xcodeproj -scheme QRX -destination 'generic/platform=iOS Simulator' build CODE_SIGNING_ALLOWED=NO
+
+  android:
+    name: Android and Quest apps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+      - name: Build and test
+        working-directory: android
+        run: gradle --no-daemon build
