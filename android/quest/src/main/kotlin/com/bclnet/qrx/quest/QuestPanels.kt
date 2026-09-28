@@ -58,8 +58,14 @@ fun ControlPanel(activity: QuestActivity) {
 fun GlyphSlotPanel(activity: QuestActivity, slot: Int) {
     val payload = activity.slots[slot]
     val glyph = payload?.let { activity.session.glyph(it) }
+    val speech = activity.speech[slot]
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface), contentAlignment = Alignment.Center) {
         if (glyph != null) GlyphCard(glyph, activity.session, Modifier.fillMaxSize())
         else Text("Waiting for a glyph…", style = MaterialTheme.typography.bodySmall)
+        if (speech != null) {
+            Surface(Modifier.align(Alignment.BottomCenter).padding(12.dp), shape = RoundedCornerShape(12.dp), tonalElevation = 4.dp) {
+                Text(speech, Modifier.padding(10.dp), style = MaterialTheme.typography.bodyMedium)
+            }
+        }
     }
 }

@@ -36,6 +36,7 @@ kotlin {
 
 dependencies {
     implementation(project(":qrx-shared"))
+    implementation(libs.jsonscene.spatial)
     implementation(libs.camerax.core)
     implementation(libs.camerax.camera2)
     implementation(libs.meta.spatial.sdk)

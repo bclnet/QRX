@@ -17,7 +17,9 @@ dependencyResolutionManagement {
 rootProject.name = "QRX"
 
 // JsonUI is a git submodule (third_party/JsonUI); its Android modules are substituted by coordinates.
-includeBuild("../third_party/JsonUI/android")
+includeBuild("../third_party/JsonUI/android") { name = "JsonUI" }
+// JsonScene (the Scene node) is a submodule too; it reuses this build's JsonUI.
+includeBuild("../third_party/JsonScene/android") { name = "JsonScene" }
 
 include(":qrx-core")
 include(":qrx-shared")

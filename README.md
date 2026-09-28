@@ -14,7 +14,7 @@ and ships three apps that share one format and one Bluetooth protocol.
 ## How it works
 
 1. The QR payload is a small text header (`docs/GLYPH.md`): optional `size:` rules, a URL (`https://…` or `blue://device/path`), flags, and an optional inline body.
-2. The glyph document is JSON with one `_type` key: `_image`, `_avplayer`, `_web`, `_button` or `_ui`. A `_ui` document *is* a JsonUI document, so forms with state, validation scripts and host actions render natively on every platform.
+2. The glyph document is JSON with one `_type` key: `_image`, `_avplayer`, `_web`, `_button` or `_ui`. A `_ui` document *is* a JsonUI document, so forms with state, validation scripts and host actions render natively on every platform. A `_ui` document whose root is a [JsonScene](https://github.com/bclnet/JsonScene) `Scene` puts animated 3D actors on the code (`examples/scene-bush.json`).
 3. The content is anchored on the code: ARKit tracks the code image on iOS, ML Kit re-detects it every frame on Android phones, and the Quest app estimates the code's pose from the passthrough camera and places a Spatial SDK panel in the room.
 
 Example payload for a QR generator (`examples/README.md` has more):
@@ -47,8 +47,8 @@ gradle :quest:installDebug        # Quest 3 in developer mode
 ```
 
 The Swift package depends on JsonUI by URL; set `JSONUI_PATH=/path/to/JsonUI`
-to build against a local checkout. The Android project includes JsonUI as a
-Gradle composite build from the `third_party/JsonUI` submodule.
+to build against a local checkout. The Android project includes JsonUI and
+JsonScene as Gradle composite builds from the `third_party/` submodules.
 
 ## Layout
 
@@ -63,6 +63,7 @@ android/app, quest       the phone and Quest apps
 docs/                    GLYPH.md, BLUE.md, ARCHITECTURE.md
 examples/                glyph documents used by the tests and bundled in the apps
 third_party/JsonUI       JsonUI submodule
+third_party/JsonScene    JsonScene submodule (the Scene node: 3D actors)
 ```
 
 ## Tests

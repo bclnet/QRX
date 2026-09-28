@@ -30,6 +30,7 @@
 		D0FA7DFDD88791F8A9EAB5E9 /* BluePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0959830CB83934D85FF06 /* BluePeripheral.swift */; };
 		E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167DD179F7DFA812D67989DA /* Vision.framework */; };
 		E82A27644D51CAA69EA746AA /* QRXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659A5879C7F84579BCAD2F6C /* QRXApp.swift */; };
+		EC1CD873851C9996867E96F7 /* JsonScene in Frameworks */ = {isa = PBXBuildFile; productRef = AA5914DE22FA087525057E15 /* JsonScene */; };
 		EC905EBA32C4BADA50D673B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05C7B2D9C52A24AEE4BB389B /* Assets.xcassets */; };
 		F01FD6DC0869AF4740C7DB40 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = A3CFA339500FA5B16084F3BD /* examples */; };
 		F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1E8E63F569161C2552D8D /* ARKit.framework */; };
@@ -85,6 +86,7 @@
 			files = (
 				57274DCE17868CE5674ECCEE /* QRXCore in Frameworks */,
 				5D838C7A12D87258096D752D /* JsonUI in Frameworks */,
+				EC1CD873851C9996867E96F7 /* JsonScene in Frameworks */,
 				F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */,
 				13CA40CC3E6EC5B94C536A49 /* CoreBluetooth.framework in Frameworks */,
 				E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */,
@@ -231,6 +233,7 @@
 			packageProductDependencies = (
 				99B33B036425D699A539C157 /* QRXCore */,
 				25084CA395E8576E40E2E828 /* JsonUI */,
+				AA5914DE22FA087525057E15 /* JsonScene */,
 			);
 			productName = QRX;
 			productReference = 76DA72610F7DF9B56E8E8679 /* QRX.app */;
@@ -279,6 +282,7 @@
 			mainGroup = 8F27490D7A39DC8282E4DFDE;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				C089A4C9868E2F536A62B35B /* XCRemoteSwiftPackageReference "JsonScene" */,
 				1EB5A29782521EDE2FDC9953 /* XCRemoteSwiftPackageReference "JsonUI" */,
 				EB72F1CEB4EE9CDE2BBC3D62 /* XCLocalSwiftPackageReference ".." */,
 			);
@@ -589,6 +593,14 @@
 				kind = branch;
 			};
 		};
+		C089A4C9868E2F536A62B35B /* XCRemoteSwiftPackageReference "JsonScene" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bclnet/JsonScene";
+			requirement = {
+				branch = claude/jsonscene;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -600,6 +612,11 @@
 		99B33B036425D699A539C157 /* QRXCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = QRXCore;
+		};
+		AA5914DE22FA087525057E15 /* JsonScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C089A4C9868E2F536A62B35B /* XCRemoteSwiftPackageReference "JsonScene" */;
+			productName = JsonScene;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

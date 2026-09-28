@@ -42,6 +42,8 @@ meta-spatial-vr = { module = "com.meta.spatial:meta-spatial-sdk-vr", version.ref
 meta-spatial-compose = { module = "com.meta.spatial:meta-spatial-sdk-compose", version.ref = "metaSpatial" }
 jsonui-core = { module = "com.bclnet.jsonui:jsonui-core" }
 jsonui-compose = { module = "com.bclnet.jsonui:jsonui-compose" }
+jsonscene-compose = { module = "com.bclnet.jsonscene:jsonscene-compose" }
+jsonscene-spatial = { module = "com.bclnet.jsonscene:jsonscene-spatial" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxRunner" }

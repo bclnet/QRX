@@ -13,11 +13,17 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Choreographer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
+import com.bclnet.jsonscene.SceneDocument
+import com.bclnet.jsonscene.spatial.SpatialSceneRenderer
+import com.bclnet.jsonui.JsonActionHandler
+import com.bclnet.jsonui.compose.JsonUIModel
+import com.bclnet.qrx.core.GlyphContent
 import com.bclnet.qrx.shared.GlyphSession
 import com.bclnet.qrx.shared.blue.BluePermissions
 import com.bclnet.qrx.shared.blue.BluetoothService
@@ -63,6 +69,19 @@ class QuestActivity : AppSystemActivity() {
     /** Glyph payload shown by each slot. */
     val slots = mutableStateMapOf<Int, String>()
     private val slotEntities = HashMap<Int, Entity>()
+    /** JsonScene scenes standing on their codes, by slot, with the JsonUI model that owns their state. */
+    private val scenes = HashMap<Int, Pair<JsonUIModel, SpatialSceneRenderer>>()
+    /** What a scene's actors last said, by slot (shown on the slot panel). */
+    val speech = mutableStateMapOf<Int, String>()
+    private val frameCallback = object : Choreographer.FrameCallback {
+        override fun doFrame(frameTimeNanos: Long) {
+            if (scenes.isNotEmpty()) {
+                val head = headPose()
+                for ((_, scene) in scenes.values) scene.frame(frameTimeNanos, head)
+            }
+            Choreographer.getInstance().postFrameCallback(this)
+        }
+    }
     private var controlPanel: Entity? = null
     var cameraState: String by mutableStateOf("camera off")
         private set
@@ -99,10 +118,13 @@ class QuestActivity : AppSystemActivity() {
     }
 
     override fun onStart() { super.onStart(); lifecycleOwner.onStart() }
-    override fun onResume() { super.onResume(); lifecycleOwner.onResume() }
-    override fun onPause() { lifecycleOwner.onPause(); super.onPause() }
+    override fun onResume() { super.onResume(); lifecycleOwner.onResume(); Choreographer.getInstance().postFrameCallback(frameCallback) }
+    override fun onPause() { Choreographer.getInstance().removeFrameCallback(frameCallback); lifecycleOwner.onPause(); super.onPause() }
     override fun onStop() { lifecycleOwner.onStop(); super.onStop() }
     override fun onDestroy() {
+        Choreographer.getInstance().removeFrameCallback(frameCallback)
+        for ((model, renderer) in scenes.values) { renderer.detach(); model.close() }
+        scenes.clear()
         scope.cancel()
         scanner.stop()
         bluetooth.stop()
@@ -165,7 +187,30 @@ class QuestActivity : AppSystemActivity() {
             } else if (!isGrabbed(existing)) {
                 existing.setComponent(Transform(pose))
             }
+            placeScene(slot, detection.payload, pose)
         }
+    }
+
+    /**
+     * A `_ui` glyph whose root is a JsonScene `Scene` gets its actors standing on the code: the scene
+     * origin is the code's pose (the panel stays beside it for status and speech).
+     */
+    private fun placeScene(slot: Int, payload: String, codePose: Pose) {
+        val existing = scenes[slot]
+        if (existing != null) {
+            existing.second.stagePose = codePose
+            return
+        }
+        val content = session.glyph(payload)?.document?.content as? GlyphContent.Ui ?: return
+        if (content.document.root.type != SceneDocument.NODE_TYPE) return
+        val model = JsonUIModel(content.document)
+        model.runtime.actions.fallback = JsonActionHandler { name, args, context -> session.actions.invoke(name, args, context) }
+        val renderer = SpatialSceneRenderer(this, content.document.root, model.runtime.context)
+        renderer.stagePose = codePose
+        renderer.onSay = { id, text -> speech[slot] = "${renderer.document.actor(id)?.name ?: id}: $text" }
+        renderer.driver.onIssue = { session.showToast(it) }
+        scenes[slot] = model to renderer
+        renderer.attach()
     }
 
     private fun freeSlot(): Int? = (0 until SLOT_COUNT).firstOrNull { it !in slots }
@@ -175,6 +220,9 @@ class QuestActivity : AppSystemActivity() {
         slotEntities.values.forEach { runCatching { it.destroy() } }
         slotEntities.clear()
         slots.clear()
+        for ((model, renderer) in scenes.values) { renderer.detach(); model.close() }
+        scenes.clear()
+        speech.clear()
         session.forgetGlyphs()
     }
 

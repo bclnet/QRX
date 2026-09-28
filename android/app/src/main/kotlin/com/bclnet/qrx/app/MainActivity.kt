@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bclnet.jsonscene.compose.JsonScene
 import com.bclnet.qrx.shared.GlyphSession
 import com.bclnet.qrx.shared.blue.BluePermissions
 import com.bclnet.qrx.shared.blue.BluetoothService
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        JsonScene.register()
         setContent {
             MaterialTheme(colorScheme = darkColorScheme()) {
                 QrxScreen(session, scanner, bluetooth)

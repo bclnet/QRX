@@ -62,7 +62,7 @@ holds type options; the other keys are the content.
 | `_avplayer` | `url`; options `loop` |
 | `_web` | `url` |
 | `_button` | `text`; optional `action` (a JsonUI action, e.g. `{ "name": "toast", "args": {...} }`) |
-| `_ui` | the whole document is a [JsonUI](https://github.com/bclnet/JsonUI) document: `_ui` is its header (state, script, strings) and the remaining keys are the root node |
+| `_ui` | the whole document is a [JsonUI](https://github.com/bclnet/JsonUI) document: `_ui` is its header (state, script, strings) and the remaining keys are the root node. A root of `"type": "Scene"` is a [JsonScene](https://github.com/bclnet/JsonScene) scene: its actors stand on the code (iOS, Quest) or fill the card (Android phones) |
 
 Unknown types are shown as a placeholder with the type name.
 

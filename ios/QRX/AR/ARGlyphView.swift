@@ -25,6 +25,7 @@ struct ARGlyphView: UIViewRepresentable {
         context.coordinator.view = view
         context.coordinator.factory.parent = view
         context.coordinator.run(with: [], options: [.resetTracking, .removeExistingAnchors])
+        view.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap(_:))))
         UIApplication.shared.isIdleTimerDisabled = true
         return view
     }
@@ -77,6 +78,19 @@ struct ARGlyphView: UIViewRepresentable {
         func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
             guard let imageAnchor = anchor as? ARImageAnchor else { return }
             node.isHidden = !imageAnchor.isTracked
+        }
+
+        func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+            let pointOfView = renderer.pointOfView
+            Task { @MainActor in self.factory.update(time: time, pointOfView: pointOfView) }
+        }
+
+        /// Taps on a JsonScene actor reach its scene; the SwiftUI planes handle their own touches.
+        @objc func tap(_ recognizer: UITapGestureRecognizer) {
+            guard let view = view else { return }
+            let point = recognizer.location(in: view)
+            guard let hit = view.hitTest(point, options: [.boundingBoxOnly: true]).first else { return }
+            Task { @MainActor in self.factory.tap(on: hit.node) }
         }
     }
 }

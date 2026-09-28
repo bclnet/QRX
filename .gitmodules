@@ -2,3 +2,7 @@
 	path = third_party/JsonUI
 	url = https://github.com/bclnet/JsonUI
 	branch = claude/ios-android-form-libraries-2jjfw5
+[submodule "third_party/JsonScene"]
+	path = third_party/JsonScene
+	url = https://github.com/bclnet/JsonScene
+	branch = claude/jsonscene

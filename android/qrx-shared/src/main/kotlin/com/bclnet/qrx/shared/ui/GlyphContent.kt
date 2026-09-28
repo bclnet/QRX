@@ -46,6 +46,8 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import com.bclnet.jsonscene.SceneDocument
+import com.bclnet.jsonscene.compose.JsonSceneView
 import com.bclnet.jsonui.JsonActionHandler
 import com.bclnet.jsonui.compose.JsonUIView
 import com.bclnet.jsonui.compose.rememberJsonUIModel
@@ -96,15 +98,22 @@ fun GlyphContentView(document: GlyphDocument, session: GlyphSession, modifier: M
     }
 }
 
-/** Hosts a JsonUI document with the session's host actions (toast, open, led, dismiss). */
+/**
+ * Hosts a JsonUI document with the session's host actions (toast, open, led, dismiss).
+ * A document whose root is a `Scene` (JsonScene) fills the card with the 3D stage instead of a scrolling form.
+ */
 @Composable
 fun GlyphUIView(content: GlyphContent.Ui, session: GlyphSession, modifier: Modifier = Modifier) {
     val model = rememberJsonUIModel(content.document)
     LaunchedEffect(model) {
         model.actions.fallback = JsonActionHandler { name, args, context -> session.actions.invoke(name, args, context) }
     }
-    Column(modifier.verticalScroll(rememberScrollState()).padding(8.dp)) {
-        JsonUIView(model)
+    if (content.document.root.type == SceneDocument.NODE_TYPE) {
+        JsonSceneView(content.document.root, model.runtime.context, modifier = modifier.fillMaxSize())
+    } else {
+        Column(modifier.verticalScroll(rememberScrollState()).padding(8.dp)) {
+            JsonUIView(model)
+        }
     }
 }
 

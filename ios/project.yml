@@ -11,6 +11,9 @@ packages:
   JsonUI:
     url: https://github.com/bclnet/JsonUI
     branch: claude/ios-android-form-libraries-2jjfw5
+  JsonScene:
+    url: https://github.com/bclnet/JsonScene
+    branch: claude/jsonscene
   QRXCore:
     path: ..
 targets:
@@ -27,6 +30,8 @@ targets:
         product: QRXCore
       - package: JsonUI
         product: JsonUI
+      - package: JsonScene
+        product: JsonScene
       - sdk: ARKit.framework
       - sdk: CoreBluetooth.framework
       - sdk: Vision.framework

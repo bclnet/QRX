@@ -8,7 +8,7 @@ android {
     namespace = "com.bclnet.qrx.shared"
     compileSdk = 35
     defaultConfig {
-        minSdk = 26
+        minSdk = 28
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true }
@@ -25,6 +25,7 @@ kotlin {
 dependencies {
     api(project(":qrx-core"))
     api(libs.jsonui.compose)
+    api(libs.jsonscene.compose)
     val composeBom = platform(libs.compose.bom)
     api(composeBom)
     api(libs.compose.ui)
