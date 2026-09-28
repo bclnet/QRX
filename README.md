@@ -52,9 +52,9 @@ swift test
 
 # Android and Quest apps (needs the JsonUI submodule)
 git submodule update --init
-cd android && gradle build
-gradle :app:installDebug          # phone
-gradle :quest:installDebug        # Quest 3 in developer mode
+cd android && ./gradlew build          # JDK 17 and ANDROID_HOME (or android/local.properties)
+./gradlew :app:installDebug       # phone
+./gradlew :quest:installDebug     # Quest 3 in developer mode
 ```
 
 The Swift package depends on JsonUI by URL; set `JSONUI_PATH=/path/to/JsonUI`
@@ -86,7 +86,7 @@ third_party/TokenX       TokenX submodule (providers, keys, usage)
 | --- | --- |
 | QRXCore (Swift, 26 tests) | `swift test` |
 | iOS app tests | Xcode, scheme `QRX` |
-| qrx-core (26), qrx-shared (6), quest (5) | `cd android && gradle test` |
+| qrx-core (26), qrx-shared (6), quest (5) | `cd android && ./gradlew test` |
 
 ## License
 
