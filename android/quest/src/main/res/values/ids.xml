@@ -1,0 +1,11 @@
+<resources>
+    <item name="panel_control" type="id" />
+    <item name="panel_glyph_0" type="id" />
+    <item name="panel_glyph_1" type="id" />
+    <item name="panel_glyph_2" type="id" />
+    <item name="panel_glyph_3" type="id" />
+    <item name="panel_glyph_4" type="id" />
+    <item name="panel_glyph_5" type="id" />
+    <item name="panel_glyph_6" type="id" />
+    <item name="panel_glyph_7" type="id" />
+</resources>

@@ -1,0 +1,607 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0D679DA061FC3341EA5AFA8F /* BlueCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A6D77F047230BB4083C544 /* BlueCentral.swift */; };
+		13CA40CC3E6EC5B94C536A49 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803B009C851D408925B4C57B /* CoreBluetooth.framework */; };
+		22169BD39C78D3EFF06C5394 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D91D9887D53DFF397DEA731 /* AppModel.swift */; };
+		31BC5B48E273F96183350550 /* AppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBA99DFABFC58B84F2E2CE0 /* AppModelTests.swift */; };
+		33031EFF8E1115F6C10E43E7 /* GlyphPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D764B8F608C824503A6E9A /* GlyphPlane.swift */; };
+		438F87A4D515C9612FAFF50A /* AppServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985D74F06A1E0C16D0C4D57D /* AppServices.swift */; };
+		553C1A17E8CA55DD4176ACB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A5932F5C470C2FDA875D46 /* ContentView.swift */; };
+		57274DCE17868CE5674ECCEE /* QRXCore in Frameworks */ = {isa = PBXBuildFile; productRef = 99B33B036425D699A539C157 /* QRXCore */; };
+		5D838C7A12D87258096D752D /* JsonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 25084CA395E8576E40E2E828 /* JsonUI */; };
+		67F39320DE850DE4067D3F94 /* GlyphContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB2BC6A7A811354B80C2593 /* GlyphContentView.swift */; };
+		7325180E298BFE70BF87652B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5167CF58C95BD1CA629AA2C1 /* WebKit.framework */; };
+		793E1FFE09D0D634EE194C07 /* BluetoothService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9562C44D95F7781BA5E44A1C /* BluetoothService.swift */; };
+		7D682A3D908B8B0CA5BD5828 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D3D9A9E1DA35E9290EA2D35 /* AVKit.framework */; };
+		8F4998981F2508C8CF0E1C97 /* ChromeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745943FF5C199E92CC58A0CE /* ChromeView.swift */; };
+		93B7A8AABCCA9A35DF4F15B6 /* BarcodeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91871E0035CD5D4AE390C95E /* BarcodeDetector.swift */; };
+		958598D2351B1157528435A0 /* ARGlyphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E72C33775DAFAA5D68FBD5F /* ARGlyphView.swift */; };
+		B69177ABD7DB8D4C253DF5A6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6850A8B33FA9C56AACABE42F /* SettingsView.swift */; };
+		B6C510AE92C85327DF2E1B6C /* BlueGattFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B2520E36C24227F825916 /* BlueGattFlowTests.swift */; };
+		C2C1F1E8B743FC5F7B8755A6 /* GlyphFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C91DF4431E165D185FDFA4 /* GlyphFactory.swift */; };
+		C729A214363930A07D2A5C76 /* GlyphPlaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */; };
+		D0FA7DFDD88791F8A9EAB5E9 /* BluePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0959830CB83934D85FF06 /* BluePeripheral.swift */; };
+		E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167DD179F7DFA812D67989DA /* Vision.framework */; };
+		E82A27644D51CAA69EA746AA /* QRXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659A5879C7F84579BCAD2F6C /* QRXApp.swift */; };
+		EC905EBA32C4BADA50D673B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05C7B2D9C52A24AEE4BB389B /* Assets.xcassets */; };
+		F01FD6DC0869AF4740C7DB40 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = A3CFA339500FA5B16084F3BD /* examples */; };
+		F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1E8E63F569161C2552D8D /* ARKit.framework */; };
+		FCA3475AC411D1498A61E23C /* ParticleLedClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00135BDDE9CB0BD5DF9D7506 /* ParticleLedClient.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		253829D808316B08CCD972C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68B27343A5B3D817E237DA15 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 07B342A866743D9E8032151D;
+			remoteInfo = QRX;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00135BDDE9CB0BD5DF9D7506 /* ParticleLedClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleLedClient.swift; sourceTree = "<group>"; };
+		04D1E8E63F569161C2552D8D /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
+		05C7B2D9C52A24AEE4BB389B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0863EEC76E55D2C6DC1955BC /* qrx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = qrx; path = ..; sourceTree = SOURCE_ROOT; };
+		167DD179F7DFA812D67989DA /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
+		2D3D9A9E1DA35E9290EA2D35 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		3D91D9887D53DFF397DEA731 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		3DB2BC6A7A811354B80C2593 /* GlyphContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphContentView.swift; sourceTree = "<group>"; };
+		5167CF58C95BD1CA629AA2C1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		64A6D77F047230BB4083C544 /* BlueCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueCentral.swift; sourceTree = "<group>"; };
+		659A5879C7F84579BCAD2F6C /* QRXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRXApp.swift; sourceTree = "<group>"; };
+		6850A8B33FA9C56AACABE42F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		745943FF5C199E92CC58A0CE /* ChromeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChromeView.swift; sourceTree = "<group>"; };
+		76DA72610F7DF9B56E8E8679 /* QRX.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = QRX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		803B009C851D408925B4C57B /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		865B2520E36C24227F825916 /* BlueGattFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueGattFlowTests.swift; sourceTree = "<group>"; };
+		86C91DF4431E165D185FDFA4 /* GlyphFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphFactory.swift; sourceTree = "<group>"; };
+		8E72C33775DAFAA5D68FBD5F /* ARGlyphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARGlyphView.swift; sourceTree = "<group>"; };
+		91871E0035CD5D4AE390C95E /* BarcodeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeDetector.swift; sourceTree = "<group>"; };
+		9562C44D95F7781BA5E44A1C /* BluetoothService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothService.swift; sourceTree = "<group>"; };
+		985D74F06A1E0C16D0C4D57D /* AppServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppServices.swift; sourceTree = "<group>"; };
+		A2D764B8F608C824503A6E9A /* GlyphPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphPlane.swift; sourceTree = "<group>"; };
+		A3CFA339500FA5B16084F3BD /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; name = examples; path = ../examples; sourceTree = SOURCE_ROOT; };
+		A7A8D8EF7FC44CD296D4747E /* QRXTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = QRXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphPlaneTests.swift; sourceTree = "<group>"; };
+		CDBA99DFABFC58B84F2E2CE0 /* AppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelTests.swift; sourceTree = "<group>"; };
+		CF3B69AFEFA294CE333B6E8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D2E0959830CB83934D85FF06 /* BluePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluePeripheral.swift; sourceTree = "<group>"; };
+		F0A5932F5C470C2FDA875D46 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7E2BA3BCB15D1D720B137BDA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57274DCE17868CE5674ECCEE /* QRXCore in Frameworks */,
+				5D838C7A12D87258096D752D /* JsonUI in Frameworks */,
+				F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */,
+				13CA40CC3E6EC5B94C536A49 /* CoreBluetooth.framework in Frameworks */,
+				E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */,
+				7325180E298BFE70BF87652B /* WebKit.framework in Frameworks */,
+				7D682A3D908B8B0CA5BD5828 /* AVKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1FD5C65F5F89ECBDBEC0838E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				04D1E8E63F569161C2552D8D /* ARKit.framework */,
+				2D3D9A9E1DA35E9290EA2D35 /* AVKit.framework */,
+				803B009C851D408925B4C57B /* CoreBluetooth.framework */,
+				167DD179F7DFA812D67989DA /* Vision.framework */,
+				5167CF58C95BD1CA629AA2C1 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		40C006F7D1543B571E3A5D30 /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				8E72C33775DAFAA5D68FBD5F /* ARGlyphView.swift */,
+				91871E0035CD5D4AE390C95E /* BarcodeDetector.swift */,
+				86C91DF4431E165D185FDFA4 /* GlyphFactory.swift */,
+				A2D764B8F608C824503A6E9A /* GlyphPlane.swift */,
+			);
+			path = AR;
+			sourceTree = "<group>";
+		};
+		4CF35DDD5A2E2D69F957CD9F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				745943FF5C199E92CC58A0CE /* ChromeView.swift */,
+				3DB2BC6A7A811354B80C2593 /* GlyphContentView.swift */,
+				6850A8B33FA9C56AACABE42F /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		66B9AF4B0FAA3FF4F3F209ED /* qrx */ = {
+			isa = PBXGroup;
+			children = (
+				A3CFA339500FA5B16084F3BD /* examples */,
+			);
+			name = qrx;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		7CD950B5406824A914161E4F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				76DA72610F7DF9B56E8E8679 /* QRX.app */,
+				A7A8D8EF7FC44CD296D4747E /* QRXTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		85A034A493FF3E81A49CB706 /* QRXTests */ = {
+			isa = PBXGroup;
+			children = (
+				CDBA99DFABFC58B84F2E2CE0 /* AppModelTests.swift */,
+				865B2520E36C24227F825916 /* BlueGattFlowTests.swift */,
+				C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */,
+			);
+			path = QRXTests;
+			sourceTree = "<group>";
+		};
+		8F27490D7A39DC8282E4DFDE = {
+			isa = PBXGroup;
+			children = (
+				FA9F35F12F072EED3115A7D6 /* Packages */,
+				A09EA40A77F1BD27FDD6CAD3 /* QRX */,
+				66B9AF4B0FAA3FF4F3F209ED /* qrx */,
+				85A034A493FF3E81A49CB706 /* QRXTests */,
+				1FD5C65F5F89ECBDBEC0838E /* Frameworks */,
+				7CD950B5406824A914161E4F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		961860E8EF0F280313BD250E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				985D74F06A1E0C16D0C4D57D /* AppServices.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		9C5B6D9A3FF636ECA5B46B7E /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				64A6D77F047230BB4083C544 /* BlueCentral.swift */,
+				D2E0959830CB83934D85FF06 /* BluePeripheral.swift */,
+				9562C44D95F7781BA5E44A1C /* BluetoothService.swift */,
+				00135BDDE9CB0BD5DF9D7506 /* ParticleLedClient.swift */,
+			);
+			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		A09EA40A77F1BD27FDD6CAD3 /* QRX */ = {
+			isa = PBXGroup;
+			children = (
+				3D91D9887D53DFF397DEA731 /* AppModel.swift */,
+				05C7B2D9C52A24AEE4BB389B /* Assets.xcassets */,
+				F0A5932F5C470C2FDA875D46 /* ContentView.swift */,
+				CF3B69AFEFA294CE333B6E8F /* Info.plist */,
+				659A5879C7F84579BCAD2F6C /* QRXApp.swift */,
+				40C006F7D1543B571E3A5D30 /* AR */,
+				9C5B6D9A3FF636ECA5B46B7E /* Bluetooth */,
+				961860E8EF0F280313BD250E /* Services */,
+				4CF35DDD5A2E2D69F957CD9F /* Views */,
+			);
+			path = QRX;
+			sourceTree = "<group>";
+		};
+		FA9F35F12F072EED3115A7D6 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				0863EEC76E55D2C6DC1955BC /* qrx */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		07B342A866743D9E8032151D /* QRX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED60403B75274258AC3B4C76 /* Build configuration list for PBXNativeTarget "QRX" */;
+			buildPhases = (
+				12EDBC8EACD0CF5D02F78A89 /* Sources */,
+				A48CCAC85F6741B9FD7ACF3A /* Resources */,
+				7E2BA3BCB15D1D720B137BDA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QRX;
+			packageProductDependencies = (
+				99B33B036425D699A539C157 /* QRXCore */,
+				25084CA395E8576E40E2E828 /* JsonUI */,
+			);
+			productName = QRX;
+			productReference = 76DA72610F7DF9B56E8E8679 /* QRX.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8CA0E1FDFD6F1808E77F463A /* QRXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AEEE0267CBD9DA0F4CD76926 /* Build configuration list for PBXNativeTarget "QRXTests" */;
+			buildPhases = (
+				9564BF2F681552F61B284772 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				078850D07592621E5067E53B /* PBXTargetDependency */,
+			);
+			name = QRXTests;
+			packageProductDependencies = (
+			);
+			productName = QRXTests;
+			productReference = A7A8D8EF7FC44CD296D4747E /* QRXTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		68B27343A5B3D817E237DA15 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					07B342A866743D9E8032151D = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 41E0937D23A7DFAA1DF76952 /* Build configuration list for PBXProject "QRX" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8F27490D7A39DC8282E4DFDE;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1EB5A29782521EDE2FDC9953 /* XCRemoteSwiftPackageReference "JsonUI" */,
+				EB72F1CEB4EE9CDE2BBC3D62 /* XCLocalSwiftPackageReference ".." */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				07B342A866743D9E8032151D /* QRX */,
+				8CA0E1FDFD6F1808E77F463A /* QRXTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A48CCAC85F6741B9FD7ACF3A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC905EBA32C4BADA50D673B8 /* Assets.xcassets in Resources */,
+				F01FD6DC0869AF4740C7DB40 /* examples in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		12EDBC8EACD0CF5D02F78A89 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				958598D2351B1157528435A0 /* ARGlyphView.swift in Sources */,
+				22169BD39C78D3EFF06C5394 /* AppModel.swift in Sources */,
+				438F87A4D515C9612FAFF50A /* AppServices.swift in Sources */,
+				93B7A8AABCCA9A35DF4F15B6 /* BarcodeDetector.swift in Sources */,
+				0D679DA061FC3341EA5AFA8F /* BlueCentral.swift in Sources */,
+				D0FA7DFDD88791F8A9EAB5E9 /* BluePeripheral.swift in Sources */,
+				793E1FFE09D0D634EE194C07 /* BluetoothService.swift in Sources */,
+				8F4998981F2508C8CF0E1C97 /* ChromeView.swift in Sources */,
+				553C1A17E8CA55DD4176ACB0 /* ContentView.swift in Sources */,
+				67F39320DE850DE4067D3F94 /* GlyphContentView.swift in Sources */,
+				C2C1F1E8B743FC5F7B8755A6 /* GlyphFactory.swift in Sources */,
+				33031EFF8E1115F6C10E43E7 /* GlyphPlane.swift in Sources */,
+				FCA3475AC411D1498A61E23C /* ParticleLedClient.swift in Sources */,
+				E82A27644D51CAA69EA746AA /* QRXApp.swift in Sources */,
+				B69177ABD7DB8D4C253DF5A6 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9564BF2F681552F61B284772 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31BC5B48E273F96183350550 /* AppModelTests.swift in Sources */,
+				B6C510AE92C85327DF2E1B6C /* BlueGattFlowTests.swift in Sources */,
+				C729A214363930A07D2A5C76 /* GlyphPlaneTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		078850D07592621E5067E53B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 07B342A866743D9E8032151D /* QRX */;
+			targetProxy = 253829D808316B08CCD972C9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		04473099A02B64503E525B6F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		05B276FF6B6321C360F83085 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.bcl.qrx.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QRX.app/QRX";
+			};
+			name = Release;
+		};
+		0771DCE72842AD7F8E44F0B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		18634CE3B855F31A6D302515 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = QRX/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.bcl.qrx;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8AD4C9F0008245E23D62E065 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = QRX/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.bcl.qrx;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B329C889D168A361E5A7D578 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.bcl.qrx.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QRX.app/QRX";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		41E0937D23A7DFAA1DF76952 /* Build configuration list for PBXProject "QRX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0771DCE72842AD7F8E44F0B1 /* Debug */,
+				04473099A02B64503E525B6F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AEEE0267CBD9DA0F4CD76926 /* Build configuration list for PBXNativeTarget "QRXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B329C889D168A361E5A7D578 /* Debug */,
+				05B276FF6B6321C360F83085 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ED60403B75274258AC3B4C76 /* Build configuration list for PBXNativeTarget "QRX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18634CE3B855F31A6D302515 /* Debug */,
+				8AD4C9F0008245E23D62E065 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		EB72F1CEB4EE9CDE2BBC3D62 /* XCLocalSwiftPackageReference ".." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1EB5A29782521EDE2FDC9953 /* XCRemoteSwiftPackageReference "JsonUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bclnet/JsonUI";
+			requirement = {
+				branch = "claude/ios-android-form-libraries-2jjfw5";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		25084CA395E8576E40E2E828 /* JsonUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1EB5A29782521EDE2FDC9953 /* XCRemoteSwiftPackageReference "JsonUI" */;
+			productName = JsonUI;
+		};
+		99B33B036425D699A539C157 /* QRXCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = QRXCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 68B27343A5B3D817E237DA15 /* Project object */;
+}

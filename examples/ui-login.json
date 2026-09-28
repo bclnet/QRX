@@ -1,0 +1,23 @@
+{
+  "_ui": {
+    "version": 1,
+    "state": { "email": "", "password": "", "remember": false, "status": "" },
+    "script": "function isValidEmail(v) { return /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(v); }\nfunction canSubmit() { return isValidEmail(state.email) && state.password.length >= 8; }\nfunction submit() { state.status = 'Welcome ' + state.email; host.invoke('toast', { message: state.status }); }"
+  },
+  "type": "VStack",
+  "alignment": "leading",
+  "spacing": 12,
+  "padding": 16,
+  "background": "#F2F2F7",
+  "cornerRadius": 16,
+  "content": [
+    { "type": "Text", "text": "Sign in", "font": "title", "bold": true },
+    { "type": "TextField", "title": "Email", "text": "$email", "keyboard": "email", "autocapitalization": "none",
+      "error": "${state.email.length > 0 && !isValidEmail(state.email) ? 'Enter a valid email address' : ''}" },
+    { "type": "SecureField", "title": "Password", "text": "$password",
+      "error": "${state.password.length > 0 && state.password.length < 8 ? 'At least 8 characters' : ''}" },
+    { "type": "Toggle", "label": "Remember me", "isOn": "$remember" },
+    { "type": "Button", "label": "Sign in", "style": "borderedProminent", "action": "js: submit()", "disabled": "${!canSubmit()}", "frame": { "maxWidth": "infinity" } },
+    { "type": "Text", "text": "$status", "font": "footnote", "foregroundColor": "secondary", "hidden": "${state.status === ''}" }
+  ]
+}

@@ -1,0 +1,19 @@
+# Swift Package Manager / Xcode
+/.build
+/.swiftpm
+/Packages
+xcuserdata/
+DerivedData/
+*.xcuserstate
+ios/QRX.xcodeproj/project.xcworkspace/xcuserdata/
+.DS_Store
+
+# Android / Gradle
+android/.gradle/
+android/build/
+android/*/build/
+android/local.properties
+android/.idea/
+android/*.iml
+android/.kotlin/
+android/*/src/main/assets/*.mp4
