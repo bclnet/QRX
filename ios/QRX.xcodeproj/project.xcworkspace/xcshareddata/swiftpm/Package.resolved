@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "jsonmind",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bclnet/JsonMind",
+      "state" : {
+        "branch" : "master",
+        "revision" : "0e4c8a4f298197c5ef231a8105c0aa4cfdcfff91"
+      }
+    },
+    {
+      "identity" : "jsonscene",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bclnet/JsonScene",
+      "state" : {
+        "branch" : "master",
+        "revision" : "45e8581cd509a3e7eb821882e3e984384e4671b8"
+      }
+    },
+    {
+      "identity" : "jsonui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bclnet/JsonUI",
+      "state" : {
+        "branch" : "master",
+        "revision" : "016b57b7cf22bbfd5392499ce792d7063245d463"
+      }
+    }
+  ],
+  "version" : 2
+}
