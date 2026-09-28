@@ -3,7 +3,7 @@
  * QRX
  *
  * The overlay bar over the camera: settings/Bluetooth, the status message,
- * forget-glyphs and the torch. Port of Glyph's ChromeView.
+ * forget-glyphs and the torch (Android counterpart of ChromeView.swift).
  */
 package com.bclnet.qrx.shared.ui
 

@@ -4,7 +4,7 @@
 //
 //  Facade over the three Bluetooth roles: the BLUE/1.0 client (BlueCentral),
 //  the BLUE/1.0 server (BluePeripheral) and the Particle LED board client
-//  (ParticleLedClient). Replaces the reference app's stubbed BlueManager.
+//  (ParticleLedClient).
 //
 
 import Foundation

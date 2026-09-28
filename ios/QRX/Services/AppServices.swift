@@ -2,7 +2,7 @@
 //  AppServices.swift
 //  QRX
 //
-//  Device services used by the chrome (torch), ported from Glyph.
+//  Device services used by the chrome (torch).
 //
 
 import AVFoundation

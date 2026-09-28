@@ -2,8 +2,8 @@
 
 Point a camera at a QR code, get a *glyph*: an image, a video, a web page, a
 button or a live [JsonUI](https://github.com/bclnet/JsonUI) form anchored on
-the code. QRX is the successor of [Glyph](https://github.com/bclnet/Glyph)
-and ships three apps that share one format and one Bluetooth protocol.
+the code. QRX ships three apps that share one format and one Bluetooth
+protocol.
 
 | app | where | stack |
 | --- | --- | --- |
@@ -26,11 +26,10 @@ https://raw.githubusercontent.com/bclnet/QRX/master/examples/ui-login.json
 
 ## Bluetooth
 
-The reference app stubbed a Bluetooth layer; QRX implements it on all three
-platforms (`docs/BLUE.md`):
+QRX has a Bluetooth layer on all three platforms (`docs/BLUE.md`):
 
 * **BLUE/1.0**, an HTTP-like text protocol over a GATT service. Every app can run the *server* (sharing its glyph documents, the LED colour and the battery level) and the *client* (used when a code says `blue://<device>/glyph/<name>`, so glyphs work with no network).
-* The **Particle LED board** client from the reference app (three LED characteristics, battery notifications), with sliders in the settings panel and the `led` host action for `_ui` glyphs.
+* A **Particle LED board** client (three LED characteristics, battery notifications), with sliders in the settings panel and the `led` host action for `_ui` glyphs.
 
 ## Building
 

@@ -3,8 +3,7 @@
 //  QRX
 //
 //  BLUE/1.0: an HTTP-like text protocol carried over Bluetooth LE (see
-//  docs/BLUE.md). This finishes the `BlueRequest` / `BlueResponse` /
-//  `LineParser` stubs of the Glyph reference app.
+//  docs/BLUE.md): the `BlueRequest` / `BlueResponse` message grammar.
 //
 
 import Foundation
@@ -35,7 +34,7 @@ public enum Blue {
     public static let text = "text/plain"
 }
 
-/// Splits a message into header lines and body, the `LineParser` of the reference app.
+/// Splits a message into header lines and body.
 public struct BlueLineParser {
     public struct Message: Equatable {
         public var lines: [String]
@@ -205,7 +204,7 @@ public struct BlueResponse: Equatable {
         headers.first { $0.key.lowercased() == name.lowercased() }?.value
     }
 
-    /// Serializes the response; the reference app called this `finish()`.
+    /// Serializes the response.
     public var text: String {
         var lines = ["\(Blue.version) \(statusCode) \(statusDescription)"]
         var headers = self.headers

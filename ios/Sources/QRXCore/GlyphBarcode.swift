@@ -73,7 +73,7 @@ public struct GlyphBarcode: Equatable, Hashable {
         self.body = body
     }
 
-    /// Glyph's original initializer name.
+    /// Convenience initializer taking the raw payload.
     public init(string s: String) { self.init(payload: s) }
 
     static func isToken(_ line: String) -> Bool {

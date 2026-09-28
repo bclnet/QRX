@@ -3,7 +3,7 @@
 //  QRX
 //
 //  GATT identifiers of the QRX service and of the Particle LED board from
-//  the reference app, plus the LED colour value.
+//  the Particle example firmware, plus the LED colour value.
 //
 
 import Foundation
@@ -21,7 +21,7 @@ public enum BlueUUIDs {
     public static let defaultLocalName = "QRX"
 }
 
-/// Particle LED example board (kept from the reference app).
+/// Particle LED example board.
 public enum ParticleUUIDs {
     public static let ledService = "b4250400-fb4b-4746-b2b0-93f0e61122c6"
     public static let redLED = "b4250401-fb4b-4746-b2b0-93f0e61122c6"

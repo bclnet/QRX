@@ -1,6 +1,6 @@
 # QRX architecture
 
-QRX is the successor of [Glyph](https://github.com/bclnet/Glyph): point a
+QRX: point a
 camera at a QR code, read its *glyph* payload, fetch the glyph document and
 show the content anchored on the code. Three apps share the same formats:
 
@@ -34,7 +34,7 @@ show the content anchored on the code. Three apps share the same formats:
 
 ## Anchoring
 
-* iOS keeps Glyph's approach: the detected code image becomes an `ARReferenceImage`, ARKit tracks it, and a plane sized by the glyph's `size:` is attached to the anchor.
+* iOS: the detected code image becomes an `ARReferenceImage`, ARKit tracks it, and a plane sized by the glyph's `size:` is attached to the anchor.
 * Android phones re-detect the code every frame with ML Kit and place the content over its bounding box with the `size:` rules applied in image space (`GlyphPlacement`, tested). This needs no ARCore and works on every device with a camera.
 * Quest 3 estimates the code's pose from its corner points, the camera intrinsics and a 6 cm nominal code size (`QrPoseEstimator`, tested), converts it with the head pose into a world pose, and creates a Spatial SDK panel entity there. Panels are grabbable so they can be repositioned.
 

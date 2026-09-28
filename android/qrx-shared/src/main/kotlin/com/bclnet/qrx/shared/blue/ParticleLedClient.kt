@@ -2,8 +2,8 @@
  * ParticleLedClient.kt
  * QRX
  *
- * Client for the Particle LED example board, the reference app's BlueManager
- * finished for Android: scans for the LED service, connects, writes the
+ * Client for the Particle LED example board, a BLE peripheral: scans for
+ * the LED service, connects, writes the
  * three colour characteristics and subscribes to the battery level.
  */
 package com.bclnet.qrx.shared.blue

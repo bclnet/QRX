@@ -2,8 +2,7 @@
 //  QRXApp.swift
 //  QRX
 //
-//  SwiftUI app lifecycle (the reference app used a storyboard and an
-//  AppDelegate). One AppModel owns lookup, Bluetooth and chrome state.
+//  SwiftUI app lifecycle. One AppModel owns lookup, Bluetooth and chrome state.
 //
 
 import SwiftUI

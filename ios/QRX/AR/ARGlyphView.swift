@@ -4,8 +4,7 @@
 //
 //  The ARKit scene: runs an image tracking session whose reference images
 //  are the QR codes found by BarcodeDetector, and asks GlyphFactory for a
-//  node when a tracked code appears. Replaces Glyph's storyboard
-//  ViewController.
+//  node when a tracked code appears.
 //
 
 import SwiftUI

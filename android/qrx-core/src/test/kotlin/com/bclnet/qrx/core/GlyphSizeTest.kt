@@ -10,7 +10,7 @@ import org.junit.Test
 class GlyphSizeTest {
     private data class Case(val text: String, val selector: GlyphSelector, val width: Dimension, val height: Dimension, val description: String)
 
-    // Ported from Glyph's GlyphSizeTests, plus the default and selector forms.
+    // Covers the size grammar, including the default and selector forms.
     private val cases = listOf(
         Case("~", GlyphSelector.Normal, Dimension(true, 1.0), Dimension(true, 1.0), "~"),
         Case("1", GlyphSelector.Normal, Dimension(false, 1.0), Dimension(false, 1.0), "1x1"),

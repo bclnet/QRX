@@ -3,7 +3,7 @@
 //  QRX
 //
 //  The overlay over the camera: settings/Bluetooth, the status message,
-//  forget-glyphs and the torch. Ported from Glyph's ChromeView.
+//  forget-glyphs and the torch.
 //
 
 import SwiftUI

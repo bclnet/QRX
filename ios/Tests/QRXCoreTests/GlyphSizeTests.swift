@@ -4,7 +4,7 @@ import XCTest
 final class GlyphSizeTests: XCTestCase {
     typealias D = GlyphSize.Dimension
 
-    // Ported from Glyph's GlyphSizeTests, plus the default and selector forms.
+    // Covers the size grammar, including the default and selector forms.
     let cases: [(String, GlyphSelector, D, D, String)] = [
         ("~", .normal, D(multiple: true, value: 1), D(multiple: true, value: 1), "~"),
         ("1", .normal, D(multiple: false, value: 1), D(multiple: false, value: 1), "1x1"),

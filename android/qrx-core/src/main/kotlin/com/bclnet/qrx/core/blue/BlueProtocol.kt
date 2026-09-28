@@ -19,7 +19,7 @@ object Blue {
     const val TEXT = "text/plain"
 }
 
-/** Splits a message into header lines and body, the `LineParser` of the reference app. */
+/** Splits a message into header lines and body. */
 object BlueLineParser {
     data class Message(val lines: List<String>, val body: String?)
 
@@ -119,7 +119,7 @@ data class BlueResponse(
 
     fun header(name: String): String? = headers.entries.firstOrNull { it.key.equals(name, ignoreCase = true) }?.value
 
-    /** Serializes the response; the reference app called this `finish()`. */
+    /** Serializes the response. */
     val text: String
         get() {
             val all = headers.toMutableMap()

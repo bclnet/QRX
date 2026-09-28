@@ -3,7 +3,7 @@
 //  QRX
 //
 //  Renders a glyph document. `_ui` glyphs are JsonUI documents rendered with
-//  JsonUIView (the reference app's `UIInfo` stub for SwiftUIJson).
+//  JsonUIView.
 //
 
 import SwiftUI

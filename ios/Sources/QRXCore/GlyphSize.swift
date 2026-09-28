@@ -2,7 +2,7 @@
 //  GlyphSize.swift
 //  QRX
 //
-//  The `size:` header of a glyph payload. Ported from Glyph; uses Double so
+//  The `size:` header of a glyph payload. Uses Double so
 //  it builds on Linux.
 //
 //      <width>x<height>[:selector] | <value> | ~

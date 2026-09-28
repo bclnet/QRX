@@ -4,7 +4,7 @@
 //
 //  Builds the SceneKit node shown on a tracked code: a plane sized by the
 //  glyph's `size:` rule whose material is either a video scene or a SwiftUI
-//  view hosted off screen (Glyph's approach). The SwiftUI content is
+//  view hosted off screen. The SwiftUI content is
 //  `GlyphContentView`, which renders `_ui` glyphs with JsonUI.
 //
 

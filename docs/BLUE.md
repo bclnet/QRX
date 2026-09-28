@@ -1,6 +1,6 @@
 # BLUE/1.0 over Bluetooth LE
 
-The Glyph reference app stubbed a Bluetooth layer with two halves: a client for
+QRX's Bluetooth layer has two halves: a client for
 a Particle board (three LED characteristics and a battery level) and an
 HTTP-like text protocol called `BLUE/1.0` with an unfinished line parser. QRX
 implements both on every platform.
@@ -9,7 +9,7 @@ implements both on every platform.
 
 QRX devices expose one GATT service; a device that runs the *server* can hand
 glyph documents to devices that run the *client*, so glyphs work with no
-network. UUIDs continue the Particle numbering of the reference app.
+network. UUIDs continue the Particle example numbering.
 
 | | UUID |
 | --- | --- |
@@ -66,7 +66,7 @@ connect to the peripheral advertising the QRX service with that local name
 
 ## Particle LED board
 
-The reference app's client for the Particle LED example firmware is kept as
+The client for the Particle LED example firmware is kept as
 is, and finished:
 
 | | UUID |

@@ -3,7 +3,7 @@
 //  QRX
 //
 //  Bluetooth panel: the BLUE server, nearby QRX devices, and the Particle
-//  LED board (sliders and battery, the reference app's stubbed UI).
+//  LED board (sliders and battery).
 //
 
 import SwiftUI

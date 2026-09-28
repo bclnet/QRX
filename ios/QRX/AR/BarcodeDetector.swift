@@ -4,7 +4,7 @@
 //
 //  Detects QR codes in ARKit frames with Vision, turns each new code into an
 //  ARReferenceImage for image tracking and resolves its glyph document.
-//  Ported from Glyph; lookups now go through AppModel/GlyphLookup.
+//  Lookups go through AppModel/GlyphLookup.
 //
 
 import ARKit
@@ -130,7 +130,7 @@ extension BarcodeDetector: ARSessionDelegate {
 }
 
 extension CIImage {
-    /// Renders the image into a new pixel buffer (ported from Glyph).
+    /// Renders the image into a new pixel buffer.
     func toPixelBuffer(pixelFormat: OSType) -> CVPixelBuffer? {
         var buffer: CVPixelBuffer?
         let options: [String: Any] = [

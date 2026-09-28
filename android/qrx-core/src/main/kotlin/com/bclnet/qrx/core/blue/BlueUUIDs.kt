@@ -3,7 +3,7 @@
  * QRX
  *
  * GATT identifiers of the QRX service and of the Particle LED board from
- * the reference app, plus the LED colour value (mirror of BlueUUIDs.swift).
+ * the Particle example firmware, plus the LED colour value (mirror of BlueUUIDs.swift).
  */
 package com.bclnet.qrx.core.blue
 
@@ -28,7 +28,7 @@ object BlueUUIDs {
     const val DEFAULT_LOCAL_NAME = "QRX"
 }
 
-/** Particle LED example board (kept from the reference app). */
+/** Particle LED example board. */
 object ParticleUUIDs {
     val LED_SERVICE: UUID = UUID.fromString("b4250400-fb4b-4746-b2b0-93f0e61122c6")
     val RED_LED: UUID = UUID.fromString("b4250401-fb4b-4746-b2b0-93f0e61122c6")
