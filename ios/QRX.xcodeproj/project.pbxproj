@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -70,7 +70,7 @@
 		659A5879C7F84579BCAD2F6C /* QRXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRXApp.swift; sourceTree = "<group>"; };
 		6850A8B33FA9C56AACABE42F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		745943FF5C199E92CC58A0CE /* ChromeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChromeView.swift; sourceTree = "<group>"; };
-		76DA72610F7DF9B56E8E8679 /* QRX.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = QRX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		76DA72610F7DF9B56E8E8679 /* QRX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		803B009C851D408925B4C57B /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		865B2520E36C24227F825916 /* BlueGattFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueGattFlowTests.swift; sourceTree = "<group>"; };
 		86C91DF4431E165D185FDFA4 /* GlyphFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphFactory.swift; sourceTree = "<group>"; };
@@ -310,7 +310,6 @@
 				08C6887E34B35CB5DFC6FB84 /* XCRemoteSwiftPackageReference "TokenX" */,
 				EB72F1CEB4EE9CDE2BBC3D62 /* XCLocalSwiftPackageReference ".." */,
 			);
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -438,12 +437,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bcl.qrx.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -521,6 +520,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = DM9BJ949Y5;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = QRX/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
@@ -542,6 +542,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = DM9BJ949Y5;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = QRX/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
@@ -560,12 +561,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.bcl.qrx.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
