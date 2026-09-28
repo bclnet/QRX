@@ -70,6 +70,7 @@ targets:
         ENABLE_PREVIEWS: YES
         DEVELOPMENT_ASSET_PATHS: ""
         CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: DM9BJ949Y5
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
   QRXTests:
     type: bundle.unit-test
