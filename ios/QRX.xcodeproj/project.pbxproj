@@ -33,6 +33,7 @@
 		C729A214363930A07D2A5C76 /* GlyphPlaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */; };
 		CF55A66D86CFB4D33CF33A3B /* JsonMindTokenX in Frameworks */ = {isa = PBXBuildFile; productRef = CEA4D3E3A513E073127E0B7D /* JsonMindTokenX */; };
 		D0FA7DFDD88791F8A9EAB5E9 /* BluePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0959830CB83934D85FF06 /* BluePeripheral.swift */; };
+		E166146FC50EE8CA0D64E8AB /* TokenXUI in Frameworks */ = {isa = PBXBuildFile; productRef = BBCCCBAE32BCA84CFF3826C3 /* TokenXUI */; };
 		E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167DD179F7DFA812D67989DA /* Vision.framework */; };
 		E82A27644D51CAA69EA746AA /* QRXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659A5879C7F84579BCAD2F6C /* QRXApp.swift */; };
 		EC1CD873851C9996867E96F7 /* JsonScene in Frameworks */ = {isa = PBXBuildFile; productRef = AA5914DE22FA087525057E15 /* JsonScene */; };
@@ -99,6 +100,7 @@
 				CF55A66D86CFB4D33CF33A3B /* JsonMindTokenX in Frameworks */,
 				6F8048D9D8A67AC7DA6AEB7C /* TokenX in Frameworks */,
 				B33FCF60D4BF9AA8A5937870 /* TokenXApple in Frameworks */,
+				E166146FC50EE8CA0D64E8AB /* TokenXUI in Frameworks */,
 				F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */,
 				13CA40CC3E6EC5B94C536A49 /* CoreBluetooth.framework in Frameworks */,
 				E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */,
@@ -253,6 +255,7 @@
 				CEA4D3E3A513E073127E0B7D /* JsonMindTokenX */,
 				FA2C42D090B4C2A6961E5D5A /* TokenX */,
 				77F9A3A722C458EC0CA986FC /* TokenXApple */,
+				BBCCCBAE32BCA84CFF3826C3 /* TokenXUI */,
 			);
 			productName = QRX;
 			productReference = 76DA72610F7DF9B56E8E8679 /* QRX.app */;
@@ -661,6 +664,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C089A4C9868E2F536A62B35B /* XCRemoteSwiftPackageReference "JsonScene" */;
 			productName = JsonScene;
+		};
+		BBCCCBAE32BCA84CFF3826C3 /* TokenXUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 08C6887E34B35CB5DFC6FB84 /* XCRemoteSwiftPackageReference "TokenX" */;
+			productName = TokenXUI;
 		};
 		CEA4D3E3A513E073127E0B7D /* JsonMindTokenX */ = {
 			isa = XCSwiftPackageProductDependency;

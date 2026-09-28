@@ -27,7 +27,7 @@ dependencies {
     api(libs.jsonui.compose)
     api(libs.jsonscene.compose)
     api(libs.jsonmind.tokenx)
-    api(libs.tokenx.android)
+    api(libs.tokenx.compose)
     val composeBom = platform(libs.compose.bom)
     api(composeBom)
     api(libs.compose.ui)

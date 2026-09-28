@@ -44,6 +44,8 @@ targets:
         product: TokenX
       - package: TokenX
         product: TokenXApple
+      - package: TokenX
+        product: TokenXUI
       - sdk: ARKit.framework
       - sdk: CoreBluetooth.framework
       - sdk: Vision.framework
