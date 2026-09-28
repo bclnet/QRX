@@ -6,7 +6,7 @@
       "location" : "https://github.com/bclnet/JsonMind",
       "state" : {
         "branch" : "master",
-        "revision" : "0e4c8a4f298197c5ef231a8105c0aa4cfdcfff91"
+        "revision" : "4296b3723d6abe13e75834ace83fb04b74f86ecb"
       }
     },
     {
@@ -25,6 +25,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "016b57b7cf22bbfd5392499ce792d7063245d463"
+      }
+    },
+    {
+      "identity" : "tokenx",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bclnet/TokenX",
+      "state" : {
+        "branch" : "master",
+        "revision" : "fd6590cd9a5bcd783b0772aa52546ed4fd451943"
       }
     }
   ],
