@@ -80,6 +80,7 @@ targets:
       - target: QRX
     settings:
       base:
+        GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: net.bcl.qrx.tests
 schemes:
   QRX:

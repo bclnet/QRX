@@ -48,6 +48,7 @@ struct ARGlyphView: UIViewRepresentable {
         let factory: GlyphFactory
         weak var view: ARSCNView?
 
+        @MainActor
         init(model: AppModel) {
             self.model = model
             factory = GlyphFactory(model: model)
@@ -71,7 +72,11 @@ struct ARGlyphView: UIViewRepresentable {
 
         func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
             guard let imageAnchor = anchor as? ARImageAnchor, let result = detector.result(for: imageAnchor.name) else { return nil }
-            return factory.node(for: imageAnchor, result: result)
+            // SceneKit may ask from its render thread; the factory builds UIKit views, so hop to main and wait.
+            let factory = self.factory
+            let build: @MainActor () -> SCNNode = { factory.node(for: imageAnchor, result: result) }
+            if Thread.isMainThread { return MainActor.assumeIsolated(build) }
+            return DispatchQueue.main.sync { MainActor.assumeIsolated(build) }
         }
 
         func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
