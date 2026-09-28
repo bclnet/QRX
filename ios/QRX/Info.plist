@@ -18,5 +18,21 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>QRX shares glyphs with nearby QRX devices and drives Particle LED boards over Bluetooth.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>QRX looks through the camera to find QR glyphs and place their content in the room.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>QRX can send prompts to an AI server on your local network when you choose one in Settings.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>QRX listens while you hold the talk button so characters in a scene can hear you.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>QRX turns what you say into text for the characters in a scene.</string>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arkit</string>
+	</array>
 </dict>
 </plist>
