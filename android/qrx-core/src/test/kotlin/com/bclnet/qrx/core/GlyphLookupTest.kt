@@ -87,7 +87,7 @@ class GlyphFragmentTest {
 
     @Test fun fragmentsAreFetchedRelativeToTheDocument() {
         val fetcher = FakeFetcher()
-        fetcher.responses["https://x/scenes/bush.json"] = """{"_ui":{"fragments":{"idle":{"clip":0,"loop":true}}},"type":"Scene","actors":[{"id":"bush","body":{"${'$'}ref":"../bodies/box.json","animations":{"idle":{"${'$'}ref":"#idle"}}},"mind":{"${'$'}ref":"minds/bush.json","budget":{"tokens":10}}}]}"""
+        fetcher.responses["https://x/scenes/bush.json"] = """{"_ui":{"fragments":{"song":{"url":"x.wav"}}},"type":"Scene","actors":[{"id":"bush","body":{"${'$'}ref":"../bodies/box.json","sounds":{"song":{"${'$'}ref":"#song"}}},"mind":{"${'$'}ref":"minds/bush.json","budget":{"tokens":10}}}]}"""
         fetcher.responses["https://x/bodies/box.json"] = """{"model":"https://x/box.glb","scale":0.1,"animations":{"sing":{"${'$'}ref":"clips.json#/sing"}}}"""
         fetcher.responses["https://x/bodies/clips.json"] = """{"sing":{"clip":0,"speed":2}}"""
         fetcher.responses["https://x/scenes/minds/bush.json"] = """{"persona":"a shrub","budget":{"tokens":99,"perTurn":50}}"""
@@ -100,7 +100,8 @@ class GlyphFragmentTest {
         val actor = ui.document.root["actors"][0]
         assertEquals(JsonPrimitive("https://x/box.glb"), actor["body"]["model"])
         assertEquals(jsonOf(2), actor["body"]["animations"]["sing"]["speed"])
-        assertEquals(JsonPrimitive(true), actor["body"]["animations"]["idle"]["loop"])
+        assertEquals(JsonPrimitive("x.wav"), actor["body"]["sounds"]["song"]["url"])
+        assertEquals(jsonOf(0.1), actor["body"]["scale"])
         assertEquals(JsonPrimitive("a shrub"), actor["mind"]["persona"])
         assertEquals(jsonOf(10), actor["mind"]["budget"]["tokens"])
         assertFalse(ui.document.value.hasFragmentReferences)

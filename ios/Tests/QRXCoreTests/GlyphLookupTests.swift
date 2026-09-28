@@ -73,7 +73,7 @@ final class GlyphLookupTests: XCTestCase {
 final class GlyphFragmentTests: XCTestCase {
     func testFragmentsAreFetchedRelativeToTheDocument() throws {
         let fetcher = FakeFetcher()
-        fetcher.responses[URL(string: "https://x/scenes/bush.json")!] = .success(Data(##"{"_ui":{"fragments":{"idle":{"clip":0,"loop":true}}},"type":"Scene","actors":[{"id":"bush","body":{"$ref":"../bodies/box.json","animations":{"idle":{"$ref":"#idle"}}},"mind":{"$ref":"minds/bush.json","budget":{"tokens":10}}}]}"##.utf8))
+        fetcher.responses[URL(string: "https://x/scenes/bush.json")!] = .success(Data(##"{"_ui":{"fragments":{"song":{"url":"x.wav"}}},"type":"Scene","actors":[{"id":"bush","body":{"$ref":"../bodies/box.json","sounds":{"song":{"$ref":"#song"}}},"mind":{"$ref":"minds/bush.json","budget":{"tokens":10}}}]}"##.utf8))
         fetcher.responses[URL(string: "https://x/bodies/box.json")!] = .success(Data(##"{"model":"https://x/box.glb","scale":0.1,"animations":{"sing":{"$ref":"clips.json#/sing"}}}"##.utf8))
         fetcher.responses[URL(string: "https://x/bodies/clips.json")!] = .success(Data(#"{"sing":{"clip":0,"speed":2}}"#.utf8))
         fetcher.responses[URL(string: "https://x/scenes/minds/bush.json")!] = .success(Data(#"{"persona":"a shrub","budget":{"tokens":99,"perTurn":50}}"#.utf8))
@@ -92,7 +92,8 @@ final class GlyphFragmentTests: XCTestCase {
         let actor = json.root["actors"][0]
         XCTAssertEqual(actor["body"]["model"], "https://x/box.glb", "body fragment resolved relative to the document")
         XCTAssertEqual(actor["body"]["animations"]["sing"]["speed"], 2, "nested fragment resolved relative to the body file")
-        XCTAssertEqual(actor["body"]["animations"]["idle"]["loop"], true, "local fragment from _ui.fragments")
+        XCTAssertEqual(actor["body"]["sounds"]["song"]["url"], "x.wav", "local fragment from _ui.fragments inside an override")
+        XCTAssertEqual(actor["body"]["scale"], 0.1)
         XCTAssertEqual(actor["mind"]["persona"], "a shrub")
         XCTAssertEqual(actor["mind"]["budget"]["tokens"], 10, "override beside $ref wins")
         XCTAssertFalse(json.value.hasFragmentReferences)
