@@ -47,6 +47,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.bclnet.jsonscene.SceneDocument
+import com.bclnet.jsonscene.compose.FilamentSceneRenderer
 import com.bclnet.jsonscene.compose.JsonSceneView
 import com.bclnet.jsonui.JsonActionHandler
 import com.bclnet.jsonui.compose.JsonUIView
@@ -109,7 +110,14 @@ fun GlyphUIView(content: GlyphContent.Ui, session: GlyphSession, modifier: Modif
         model.actions.fallback = JsonActionHandler { name, args, context -> session.actions.invoke(name, args, context) }
     }
     if (content.document.root.type == SceneDocument.NODE_TYPE) {
-        JsonSceneView(content.document.root, model.runtime.context, modifier = modifier.fillMaxSize())
+        val appContext = LocalContext.current
+        val renderer = remember(model) { FilamentSceneRenderer(appContext, content.document.root, model.runtime.context, mindProvider = session.ai.provider) }
+        DisposableEffect(renderer) {
+            val handler: (String) -> Unit = { renderer.driver.heard(it) }
+            session.heardHandlers += handler
+            onDispose { session.heardHandlers -= handler }
+        }
+        JsonSceneView(renderer, modifier.fillMaxSize())
     } else {
         Column(modifier.verticalScroll(rememberScrollState()).padding(8.dp)) {
             JsonUIView(model)

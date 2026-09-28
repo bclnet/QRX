@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ChromeView: View {
     @EnvironmentObject private var model: AppModel
@@ -48,6 +49,16 @@ struct ChromeView: View {
                 }
                 .padding()
                 .accessibilityLabel(Text("Torch"))
+                Button { model.speech.toggle() } label: {
+                    Image(systemName: model.speech.isListening ? "mic.fill" : "mic").font(.largeTitle)
+                        .foregroundColor(model.speech.isListening ? .red : .accentColor)
+                }
+                .padding(.horizontal)
+                .accessibilityLabel(Text(model.speech.isListening ? "Stop listening" : "Talk to the glyphs"))
+                if model.speech.isListening, !model.speech.transcript.isEmpty {
+                    Text(model.speech.transcript).font(.caption).lineLimit(2).frame(maxWidth: 160)
+                        .padding(6).background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8))
+                }
                 Spacer()
             }
         }

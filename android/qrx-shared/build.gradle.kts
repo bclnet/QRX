@@ -26,6 +26,8 @@ dependencies {
     api(project(":qrx-core"))
     api(libs.jsonui.compose)
     api(libs.jsonscene.compose)
+    api(libs.jsonmind.tokenx)
+    api(libs.tokenx.android)
     val composeBom = platform(libs.compose.bom)
     api(composeBom)
     api(libs.compose.ui)

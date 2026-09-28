@@ -7,9 +7,9 @@ protocol.
 
 | app | where | stack |
 | --- | --- | --- |
-| iOS | `ios/QRX.xcodeproj` (sources in `ios/QRX`, core package at the root `Package.swift`) | SwiftUI, ARKit image tracking + Vision, SceneKit, JsonUI, CoreBluetooth |
-| Android | `android/app` | Jetpack Compose, CameraX + ML Kit, JsonUI Compose, Bluetooth LE |
-| Meta Quest 3 | `android/quest` | Meta Spatial SDK 0.14 panels, Passthrough Camera API + ML Kit, JsonUI Compose, Bluetooth LE |
+| iOS | `ios/QRX.xcodeproj` (sources in `ios/QRX`, core package at the root `Package.swift`) | SwiftUI, ARKit image tracking + Vision, SceneKit, JsonUI, JsonScene, TokenX, Speech, CoreBluetooth |
+| Android | `android/app` | Jetpack Compose, CameraX + ML Kit, JsonUI Compose, JsonScene (Filament), TokenX, SpeechRecognizer, Bluetooth LE |
+| Meta Quest 3 | `android/quest` | Meta Spatial SDK 0.14 panels and entities, Passthrough Camera API + ML Kit, JsonUI Compose, JsonScene, TokenX, Bluetooth LE |
 
 ## How it works
 
@@ -23,6 +23,18 @@ Example payload for a QR generator (`examples/README.md` has more):
 size: *3
 https://raw.githubusercontent.com/bclnet/QRX/master/examples/ui-login.json
 ```
+
+## AI and speech
+
+Actors on a scene glyph have minds ([JsonMind](https://github.com/bclnet/JsonMind))
+that answer through [TokenX](https://github.com/bclnet/TokenX): the settings
+panel has a provider picker (Anthropic, OpenAI, Gemini, or a local
+OpenAI-compatible server) and an API key field. Keys are stored encrypted
+(Keychain on iOS, Android Keystore on Android) and the panel shows today's
+requests, tokens and cost. Until a provider is configured, actors answer with
+their canned rules. The microphone button on the chrome bar is push-to-talk:
+what you say is transcribed on the device and given to the actors as a
+`spoken` event.
 
 ## Bluetooth
 
@@ -47,24 +59,25 @@ gradle :quest:installDebug        # Quest 3 in developer mode
 
 The Swift package depends on JsonUI by URL; set `JSONUI_PATH=/path/to/JsonUI`
 to build against a local checkout. The Android project includes JsonUI,
-JsonMind and JsonScene as Gradle composite builds from the `third_party/`
-submodules.
+TokenX, JsonMind and JsonScene as Gradle composite builds from the
+`third_party/` submodules.
 
 ## Layout
 
 ```
 Package.swift            QRXCore manifest (root, so SwiftPM can add the package by URL)
 ios/Sources/QRXCore      glyph payloads, documents, lookup, BLUE/1.0 (tested on Linux)
-ios/QRX, ios/QRXTests    iOS app and its tests
+ios/QRX, ios/QRXTests    iOS app (AR view, glyph factory, Bluetooth, AIService, SpeechInput) and its tests
 ios/project.yml          XcodeGen spec for ios/QRX.xcodeproj
 android/qrx-core         Kotlin/JVM mirror of QRXCore with tests
-android/qrx-shared       camera + ML Kit scanning, glyph composables, Bluetooth LE
+android/qrx-shared       camera + ML Kit scanning, glyph composables, Bluetooth LE, AiService, SpeechInput
 android/app, quest       the phone and Quest apps
 docs/                    GLYPH.md, BLUE.md, ARCHITECTURE.md
 examples/                glyph documents used by the tests and bundled in the apps
 third_party/JsonUI       JsonUI submodule
 third_party/JsonScene    JsonScene submodule (the Scene node: 3D actors)
-third_party/JsonMind     JsonMind submodule (minds and the command vocabulary; TokenX supplies the tokens)
+third_party/JsonMind     JsonMind submodule (minds and the command vocabulary, the TokenX adapter)
+third_party/TokenX       TokenX submodule (providers, keys, usage)
 ```
 
 ## Tests

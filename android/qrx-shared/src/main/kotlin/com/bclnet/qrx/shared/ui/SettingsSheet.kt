@@ -34,7 +34,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.bclnet.qrx.core.blue.LedColor
+import com.bclnet.tokenx.ProviderKind
 import com.bclnet.qrx.core.blue.ParticleUUIDs
 import com.bclnet.qrx.shared.GlyphSession
 
@@ -50,6 +56,7 @@ fun SettingsSheet(session: GlyphSession, onDismiss: () -> Unit) {
 fun SettingsContent(session: GlyphSession, modifier: Modifier = Modifier) {
     val bluetooth = session.bluetooth
     Column(modifier) {
+        AiSection(session)
         Section("Share glyphs over Bluetooth") {
             if (!bluetooth.isAvailable) Text("Bluetooth is not available on this device.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -122,5 +129,49 @@ private fun ChannelSlider(label: String, value: Float, onChange: (Float) -> Unit
         Slider(value = value, onValueChange = onChange, onValueChangeFinished = { onFinished() }, valueRange = 0f..255f, steps = 254, enabled = enabled, modifier = Modifier.weight(1f))
         Spacer(Modifier.width(8.dp))
         Text(value.toInt().toString(), Modifier.width(36.dp), style = MaterialTheme.typography.labelMedium)
+    }
+}
+
+/** TokenX: the provider the actors' minds use, its key, and today's usage. Keys are stored encrypted. */
+@Composable
+private fun AiSection(session: GlyphSession) {
+    val ai = session.ai
+    var provider by remember { mutableStateOf(ai.settings.activeProvider ?: ProviderKind.ANTHROPIC) }
+    var key by remember { mutableStateOf("") }
+    var localUrl by remember { mutableStateOf(ai.settings.localBaseUrl ?: "") }
+    var localModel by remember { mutableStateOf(ai.settings.localModel ?: "") }
+    var menu by remember { mutableStateOf(false) }
+    Section("AI (TokenX)") {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text("Provider", Modifier.weight(1f))
+            TextButton(onClick = { menu = true }) { Text(provider.displayName + if (provider in ai.configured) " ✓" else "") }
+            DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                for (kind in ProviderKind.entries) DropdownMenuItem(text = { Text(kind.displayName + if (kind in ai.configured) " ✓" else "") }, onClick = { provider = kind; menu = false })
+            }
+        }
+        if (provider.needsKey) {
+            OutlinedTextField(value = key, onValueChange = { key = it }, label = { Text(if (provider in ai.configured) "API key (stored; enter to replace)" else "API key") },
+                singleLine = true, visualTransformation = PasswordVisualTransformation(), modifier = Modifier.fillMaxWidth())
+        } else {
+            OutlinedTextField(value = localUrl, onValueChange = { localUrl = it }, label = { Text("Server URL, e.g. http://192.168.1.20:11434/v1") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = localModel, onValueChange = { localModel = it }, label = { Text("Model name, e.g. llama3") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        }
+        Row(Modifier.fillMaxWidth()) {
+            Button(onClick = {
+                if (!provider.needsKey) ai.update { it.copy(localBaseUrl = localUrl.ifBlank { null }, localModel = localModel.ifBlank { null }) }
+                ai.activate(provider, key)
+                key = ""
+            }, enabled = !(provider.needsKey && key.isBlank() && provider !in ai.configured)) {
+                Text(if (ai.settings.activeProvider == provider && key.isBlank()) "Active" else "Use ${provider.displayName}")
+            }
+            if (provider in ai.configured) OutlinedButton(onClick = { ai.removeKey(provider) }, modifier = Modifier.padding(start = 8.dp)) { Text("Remove key") }
+        }
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text("Keep prompts in the usage log", Modifier.weight(1f))
+            Switch(checked = ai.settings.logPrompts, onCheckedChange = { on -> ai.update { it.copy(logPrompts = on) } })
+        }
+        Labeled("Today", "%d requests, %d tokens, $%.4f".format(ai.usageToday.requests, ai.usageToday.totalTokens, ai.usageToday.costUsd))
+        Text(ai.characterModel?.let { "Characters answer with $it." } ?: "Pick a provider and enter its API key; until then actors use their canned rules.", style = MaterialTheme.typography.bodySmall)
+        ai.lastError?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
     }
 }

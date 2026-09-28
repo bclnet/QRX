@@ -17,6 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,6 +55,10 @@ fun ChromeBar(session: GlyphSession, onToggleFlash: (() -> Unit)? = null, modifi
             IconButton(onClick = onToggleFlash) {
                 Icon(if (session.flashOn) Icons.Filled.FlashOn else Icons.Filled.FlashOff, contentDescription = "Torch", tint = MaterialTheme.colorScheme.onSurface)
             }
+        }
+        IconButton(onClick = { session.speech.toggle() }) {
+            Icon(if (session.speech.isListening) Icons.Filled.Mic else Icons.Filled.MicOff, contentDescription = if (session.speech.isListening) "Stop listening" else "Talk to the glyphs",
+                tint = if (session.speech.isListening) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
         }
     }
 }

@@ -29,7 +29,9 @@ import com.bclnet.qrx.core.GlyphBarcode
 import com.bclnet.qrx.core.GlyphDocument
 import com.bclnet.qrx.core.GlyphLookup
 import com.bclnet.qrx.core.blue.LedColor
+import com.bclnet.qrx.shared.ai.AiService
 import com.bclnet.qrx.shared.blue.BluetoothService
+import com.bclnet.qrx.shared.speech.SpeechInput
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -57,10 +59,23 @@ class GlyphSession(private val context: Context, val bluetooth: BluetoothService
     /** Host actions offered to `_ui` glyphs and `_button` actions. */
     val actions = JsonActions()
     val lookup = GlyphLookup(blue = bluetooth.client)
+    /** TokenX: providers, keys and usage, plus the JsonMind provider for scene actors. */
+    val ai = AiService(context)
+    /** Push-to-talk speech, delivered to scenes as `spoken` events. */
+    val speech = SpeechInput(context)
+    /** Scenes register here to receive what the user said. */
+    val heardHandlers = mutableListOf<(String) -> Unit>()
 
     init {
         registerActions()
         shareBundledExamples()
+        speech.onHeard = { heard(it) }
+    }
+
+    /** Delivers recognised speech to every scene on the stage. */
+    fun heard(text: String) {
+        showToast("“$text”")
+        heardHandlers.toList().forEach { it(text) }
     }
 
     fun glyph(payload: String): FoundGlyph? = found.firstOrNull { it.id == payload }

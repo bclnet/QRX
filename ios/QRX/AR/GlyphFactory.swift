@@ -27,7 +27,15 @@ final class GlyphFactory {
     /// JsonScene scenes standing on their codes, keyed by barcode id, with the JsonUI model owning their state.
     private var scenes: [String: (model: JsonUIModel, controller: JsonSceneController)] = [:]
 
-    init(model: AppModel) { self.model = model }
+    init(model: AppModel) {
+        self.model = model
+        model.heardHandlers.append { [weak self] text in self?.heard(text) }
+    }
+
+    /// Recognised speech goes to every scene as a `spoken` event.
+    func heard(_ text: String) {
+        for (_, scene) in scenes { scene.controller.heard(text) }
+    }
 
     func node(for anchor: ARImageAnchor, result: BarcodeResult) -> SCNNode {
         let physical = anchor.referenceImage.physicalSize
@@ -67,7 +75,7 @@ final class GlyphFactory {
         if let existing = scenes[key] { return existing.controller }
         let ui = JsonUIModel(document: document)
         ui.runtime.actions.fallback = { [weak model] name, args, context in model?.actions.invoke(name, args: args, context: context) }
-        let controller = JsonSceneController(document: SceneDocument(document: document) ?? SceneDocument(), context: ui.runtime.context)
+        let controller = JsonSceneController(document: SceneDocument(document: document) ?? SceneDocument(), context: ui.runtime.context, mindProvider: model.ai.provider)
         controller.onIssue = { [weak model] message in Task { @MainActor in model?.showToast(message) } }
         scenes[key] = (ui, controller)
         return controller

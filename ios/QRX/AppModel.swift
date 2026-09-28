@@ -24,8 +24,14 @@ final class AppModel: ObservableObject {
     // MARK: Services
     let bluetooth = BluetoothService()
     lazy var lookup = GlyphLookup(fetcher: URLSessionFetcher(), blue: bluetooth.central)
+    /// TokenX: providers, keys and usage, plus the JsonMind provider for scene actors.
+    let ai = AIService()
+    /// Push-to-talk speech, delivered to scenes as `spoken` events.
+    let speech = SpeechInput()
     /// Host actions offered to `_ui` glyphs and `_button` actions.
     let actions = JsonActions()
+    /// Scenes register here to receive what the user said.
+    var heardHandlers: [(String) -> Void] = []
 
     private var toastTask: Task<Void, Never>?
 
@@ -40,6 +46,13 @@ final class AppModel: ObservableObject {
     init() {
         registerActions()
         shareBundledExamples()
+        speech.onHeard = { [weak self] text in self?.heard(text) }
+    }
+
+    /// Delivers recognised speech to every scene on the stage.
+    func heard(_ text: String) {
+        showToast("“\(text)”")
+        heardHandlers.forEach { $0(text) }
     }
 
     func start() {

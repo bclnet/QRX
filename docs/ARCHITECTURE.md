@@ -52,3 +52,8 @@ the LED board) and can run the server that shares its glyph documents.
 | `android/qrx-core` JVM tests (same coverage as QRXCore) | JVM |
 | `android/qrx-shared` JVM tests (`GlyphPlacement`, Blue chunk assembly) | JVM |
 | `android/quest` JVM tests (`QrPoseEstimator`) | JVM |
+
+## AI and speech
+
+* `AIService` (iOS) / `AiService` (Android) own a TokenX `TokenServer`: an SQLite store in the app's private storage, keys encrypted with a Keychain or Keystore held cipher key, and the settings the panel edits (active provider, local server, prompt logging). They expose a `TokenXMindProvider` that every scene passes to its actors' `MindSession`s, so a bush asks TokenX for tokens without knowing the provider or model.
+* `SpeechInput` is push-to-talk on the chrome bar (SFSpeechRecognizer on iOS, SpeechRecognizer on Android). The final transcript goes through the app model's `heard` to every scene as a `spoken` event, which is one of the events a mind can wake on.

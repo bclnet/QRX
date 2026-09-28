@@ -14,6 +14,12 @@ packages:
   JsonScene:
     url: https://github.com/bclnet/JsonScene
     branch: master
+  JsonMind:
+    url: https://github.com/bclnet/JsonMind
+    branch: master
+  TokenX:
+    url: https://github.com/bclnet/TokenX
+    branch: master
   QRXCore:
     path: ..
 targets:
@@ -32,11 +38,18 @@ targets:
         product: JsonUI
       - package: JsonScene
         product: JsonScene
+      - package: JsonMind
+        product: JsonMindTokenX
+      - package: TokenX
+        product: TokenX
+      - package: TokenX
+        product: TokenXApple
       - sdk: ARKit.framework
       - sdk: CoreBluetooth.framework
       - sdk: Vision.framework
       - sdk: WebKit.framework
       - sdk: AVKit.framework
+      - sdk: Speech.framework
     info:
       path: QRX/Info.plist
     settings:

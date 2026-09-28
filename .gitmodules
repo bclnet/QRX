@@ -10,3 +10,7 @@
 	path = third_party/JsonMind
 	url = https://github.com/bclnet/JsonMind
 	branch = master
+[submodule "third_party/TokenX"]
+	path = third_party/TokenX
+	url = https://github.com/bclnet/TokenX
+	branch = master

@@ -9,24 +9,29 @@
 /* Begin PBXBuildFile section */
 		0D679DA061FC3341EA5AFA8F /* BlueCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A6D77F047230BB4083C544 /* BlueCentral.swift */; };
 		13CA40CC3E6EC5B94C536A49 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803B009C851D408925B4C57B /* CoreBluetooth.framework */; };
+		1A5FF89C1B9C18D76CBEA8F7 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F505396C732787D081A462F1 /* Speech.framework */; };
 		22169BD39C78D3EFF06C5394 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D91D9887D53DFF397DEA731 /* AppModel.swift */; };
 		31BC5B48E273F96183350550 /* AppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBA99DFABFC58B84F2E2CE0 /* AppModelTests.swift */; };
 		33031EFF8E1115F6C10E43E7 /* GlyphPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D764B8F608C824503A6E9A /* GlyphPlane.swift */; };
+		3B6F508A3E56AE9DBC737AF4 /* SpeechInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BA2A3DDE9BC4278BE7EEB /* SpeechInput.swift */; };
 		438F87A4D515C9612FAFF50A /* AppServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985D74F06A1E0C16D0C4D57D /* AppServices.swift */; };
 		553C1A17E8CA55DD4176ACB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A5932F5C470C2FDA875D46 /* ContentView.swift */; };
 		57274DCE17868CE5674ECCEE /* QRXCore in Frameworks */ = {isa = PBXBuildFile; productRef = 99B33B036425D699A539C157 /* QRXCore */; };
 		5D838C7A12D87258096D752D /* JsonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 25084CA395E8576E40E2E828 /* JsonUI */; };
 		67F39320DE850DE4067D3F94 /* GlyphContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB2BC6A7A811354B80C2593 /* GlyphContentView.swift */; };
+		6F8048D9D8A67AC7DA6AEB7C /* TokenX in Frameworks */ = {isa = PBXBuildFile; productRef = FA2C42D090B4C2A6961E5D5A /* TokenX */; };
 		7325180E298BFE70BF87652B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5167CF58C95BD1CA629AA2C1 /* WebKit.framework */; };
 		793E1FFE09D0D634EE194C07 /* BluetoothService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9562C44D95F7781BA5E44A1C /* BluetoothService.swift */; };
 		7D682A3D908B8B0CA5BD5828 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D3D9A9E1DA35E9290EA2D35 /* AVKit.framework */; };
 		8F4998981F2508C8CF0E1C97 /* ChromeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745943FF5C199E92CC58A0CE /* ChromeView.swift */; };
 		93B7A8AABCCA9A35DF4F15B6 /* BarcodeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91871E0035CD5D4AE390C95E /* BarcodeDetector.swift */; };
 		958598D2351B1157528435A0 /* ARGlyphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E72C33775DAFAA5D68FBD5F /* ARGlyphView.swift */; };
+		B33FCF60D4BF9AA8A5937870 /* TokenXApple in Frameworks */ = {isa = PBXBuildFile; productRef = 77F9A3A722C458EC0CA986FC /* TokenXApple */; };
 		B69177ABD7DB8D4C253DF5A6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6850A8B33FA9C56AACABE42F /* SettingsView.swift */; };
 		B6C510AE92C85327DF2E1B6C /* BlueGattFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B2520E36C24227F825916 /* BlueGattFlowTests.swift */; };
 		C2C1F1E8B743FC5F7B8755A6 /* GlyphFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C91DF4431E165D185FDFA4 /* GlyphFactory.swift */; };
 		C729A214363930A07D2A5C76 /* GlyphPlaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */; };
+		CF55A66D86CFB4D33CF33A3B /* JsonMindTokenX in Frameworks */ = {isa = PBXBuildFile; productRef = CEA4D3E3A513E073127E0B7D /* JsonMindTokenX */; };
 		D0FA7DFDD88791F8A9EAB5E9 /* BluePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0959830CB83934D85FF06 /* BluePeripheral.swift */; };
 		E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167DD179F7DFA812D67989DA /* Vision.framework */; };
 		E82A27644D51CAA69EA746AA /* QRXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659A5879C7F84579BCAD2F6C /* QRXApp.swift */; };
@@ -34,6 +39,7 @@
 		EC905EBA32C4BADA50D673B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05C7B2D9C52A24AEE4BB389B /* Assets.xcassets */; };
 		F01FD6DC0869AF4740C7DB40 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = A3CFA339500FA5B16084F3BD /* examples */; };
 		F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1E8E63F569161C2552D8D /* ARKit.framework */; };
+		F88C523EDAF02C8D3E7DFC37 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F13F333B7C821766EF3CF /* AIService.swift */; };
 		FCA3475AC411D1498A61E23C /* ParticleLedClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00135BDDE9CB0BD5DF9D7506 /* ParticleLedClient.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,7 +58,9 @@
 		04D1E8E63F569161C2552D8D /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		05C7B2D9C52A24AEE4BB389B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0863EEC76E55D2C6DC1955BC /* qrx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = qrx; path = ..; sourceTree = SOURCE_ROOT; };
+		0C9F13F333B7C821766EF3CF /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIService.swift; sourceTree = "<group>"; };
 		167DD179F7DFA812D67989DA /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
+		178BA2A3DDE9BC4278BE7EEB /* SpeechInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechInput.swift; sourceTree = "<group>"; };
 		2D3D9A9E1DA35E9290EA2D35 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		3D91D9887D53DFF397DEA731 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		3DB2BC6A7A811354B80C2593 /* GlyphContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphContentView.swift; sourceTree = "<group>"; };
@@ -77,6 +85,7 @@
 		CF3B69AFEFA294CE333B6E8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D2E0959830CB83934D85FF06 /* BluePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluePeripheral.swift; sourceTree = "<group>"; };
 		F0A5932F5C470C2FDA875D46 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F505396C732787D081A462F1 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,11 +96,15 @@
 				57274DCE17868CE5674ECCEE /* QRXCore in Frameworks */,
 				5D838C7A12D87258096D752D /* JsonUI in Frameworks */,
 				EC1CD873851C9996867E96F7 /* JsonScene in Frameworks */,
+				CF55A66D86CFB4D33CF33A3B /* JsonMindTokenX in Frameworks */,
+				6F8048D9D8A67AC7DA6AEB7C /* TokenX in Frameworks */,
+				B33FCF60D4BF9AA8A5937870 /* TokenXApple in Frameworks */,
 				F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */,
 				13CA40CC3E6EC5B94C536A49 /* CoreBluetooth.framework in Frameworks */,
 				E7E318A14788C37DD36666DB /* Vision.framework in Frameworks */,
 				7325180E298BFE70BF87652B /* WebKit.framework in Frameworks */,
 				7D682A3D908B8B0CA5BD5828 /* AVKit.framework in Frameworks */,
+				1A5FF89C1B9C18D76CBEA8F7 /* Speech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +117,7 @@
 				04D1E8E63F569161C2552D8D /* ARKit.framework */,
 				2D3D9A9E1DA35E9290EA2D35 /* AVKit.framework */,
 				803B009C851D408925B4C57B /* CoreBluetooth.framework */,
+				F505396C732787D081A462F1 /* Speech.framework */,
 				167DD179F7DFA812D67989DA /* Vision.framework */,
 				5167CF58C95BD1CA629AA2C1 /* WebKit.framework */,
 			);
@@ -174,7 +188,9 @@
 		961860E8EF0F280313BD250E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0C9F13F333B7C821766EF3CF /* AIService.swift */,
 				985D74F06A1E0C16D0C4D57D /* AppServices.swift */,
+				178BA2A3DDE9BC4278BE7EEB /* SpeechInput.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -234,6 +250,9 @@
 				99B33B036425D699A539C157 /* QRXCore */,
 				25084CA395E8576E40E2E828 /* JsonUI */,
 				AA5914DE22FA087525057E15 /* JsonScene */,
+				CEA4D3E3A513E073127E0B7D /* JsonMindTokenX */,
+				FA2C42D090B4C2A6961E5D5A /* TokenX */,
+				77F9A3A722C458EC0CA986FC /* TokenXApple */,
 			);
 			productName = QRX;
 			productReference = 76DA72610F7DF9B56E8E8679 /* QRX.app */;
@@ -282,8 +301,10 @@
 			mainGroup = 8F27490D7A39DC8282E4DFDE;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				3A4A6DEC553827B59266AC6C /* XCRemoteSwiftPackageReference "JsonMind" */,
 				C089A4C9868E2F536A62B35B /* XCRemoteSwiftPackageReference "JsonScene" */,
 				1EB5A29782521EDE2FDC9953 /* XCRemoteSwiftPackageReference "JsonUI" */,
+				08C6887E34B35CB5DFC6FB84 /* XCRemoteSwiftPackageReference "TokenX" */,
 				EB72F1CEB4EE9CDE2BBC3D62 /* XCLocalSwiftPackageReference ".." */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -313,6 +334,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F88C523EDAF02C8D3E7DFC37 /* AIService.swift in Sources */,
 				958598D2351B1157528435A0 /* ARGlyphView.swift in Sources */,
 				22169BD39C78D3EFF06C5394 /* AppModel.swift in Sources */,
 				438F87A4D515C9612FAFF50A /* AppServices.swift in Sources */,
@@ -328,6 +350,7 @@
 				FCA3475AC411D1498A61E23C /* ParticleLedClient.swift in Sources */,
 				E82A27644D51CAA69EA746AA /* QRXApp.swift in Sources */,
 				B69177ABD7DB8D4C253DF5A6 /* SettingsView.swift in Sources */,
+				3B6F508A3E56AE9DBC737AF4 /* SpeechInput.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,9 +608,25 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		08C6887E34B35CB5DFC6FB84 /* XCRemoteSwiftPackageReference "TokenX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bclnet/TokenX";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		1EB5A29782521EDE2FDC9953 /* XCRemoteSwiftPackageReference "JsonUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bclnet/JsonUI";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		3A4A6DEC553827B59266AC6C /* XCRemoteSwiftPackageReference "JsonMind" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bclnet/JsonMind";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -609,6 +648,11 @@
 			package = 1EB5A29782521EDE2FDC9953 /* XCRemoteSwiftPackageReference "JsonUI" */;
 			productName = JsonUI;
 		};
+		77F9A3A722C458EC0CA986FC /* TokenXApple */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 08C6887E34B35CB5DFC6FB84 /* XCRemoteSwiftPackageReference "TokenX" */;
+			productName = TokenXApple;
+		};
 		99B33B036425D699A539C157 /* QRXCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = QRXCore;
@@ -617,6 +661,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C089A4C9868E2F536A62B35B /* XCRemoteSwiftPackageReference "JsonScene" */;
 			productName = JsonScene;
+		};
+		CEA4D3E3A513E073127E0B7D /* JsonMindTokenX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A4A6DEC553827B59266AC6C /* XCRemoteSwiftPackageReference "JsonMind" */;
+			productName = JsonMindTokenX;
+		};
+		FA2C42D090B4C2A6961E5D5A /* TokenX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 08C6887E34B35CB5DFC6FB84 /* XCRemoteSwiftPackageReference "TokenX" */;
+			productName = TokenX;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -205,8 +205,9 @@ class QuestActivity : AppSystemActivity() {
         if (content.document.root.type != SceneDocument.NODE_TYPE) return
         val model = JsonUIModel(content.document)
         model.runtime.actions.fallback = JsonActionHandler { name, args, context -> session.actions.invoke(name, args, context) }
-        val renderer = SpatialSceneRenderer(this, content.document.root, model.runtime.context)
+        val renderer = SpatialSceneRenderer(this, content.document.root, model.runtime.context, mindProvider = session.ai.provider)
         renderer.stagePose = codePose
+        session.heardHandlers += { text -> renderer.driver.heard(text) }
         renderer.onSay = { id, text -> speech[slot] = "${renderer.document.actor(id)?.name ?: id}: $text" }
         renderer.driver.onIssue = { session.showToast(it) }
         scenes[slot] = model to renderer
@@ -222,6 +223,7 @@ class QuestActivity : AppSystemActivity() {
         slots.clear()
         for ((model, renderer) in scenes.values) { renderer.detach(); model.close() }
         scenes.clear()
+        session.heardHandlers.clear()
         speech.clear()
         session.forgetGlyphs()
     }
