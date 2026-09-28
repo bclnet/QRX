@@ -1,0 +1,5 @@
+{
+  "email": { "type": "TextField", "title": "Email", "text": "$email", "keyboard": "email" },
+  "password": { "type": "SecureField", "title": "Password", "text": "$password" },
+  "submit": { "type": "Button", "title": "Sign in", "action": "signIn", "disabled": "${!state.email || !state.password}" }
+}

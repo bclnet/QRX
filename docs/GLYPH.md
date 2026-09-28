@@ -51,6 +51,16 @@ anchor := l | c | r      (t | c | b for height)
 Examples: `*2` (twice the code, centred), `10l10x20b10` (10 wide anchored left
 offset 10, 20 high anchored bottom offset 10), `1x2:active`.
 
+## Fragments
+
+A document may include shared pieces with JsonUI
+[fragments](https://github.com/bclnet/JsonUI/blob/master/docs/SCHEMA.md#fragments):
+`{ "$ref": "shared/fields.json#/email" }`, `{ "$ref": "#name" }` for
+`_ui.fragments.name`, or a whole file. Relative references resolve against
+the document's own URL, `blue://device/path` references are served by the
+BLUE peer, and QRX fetches every referenced document (at most 16) before it
+parses the glyph, so renderers only ever see plain JSON.
+
 ## Glyph documents
 
 A JSON object with one key starting with `_` that names the type. Its value

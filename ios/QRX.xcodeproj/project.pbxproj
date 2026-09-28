@@ -589,7 +589,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bclnet/JsonUI";
 			requirement = {
-				branch = "claude/ios-android-form-libraries-2jjfw5";
+				branch = master;
 				kind = branch;
 			};
 		};
@@ -597,7 +597,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bclnet/JsonScene";
 			requirement = {
-				branch = claude/jsonscene;
+				branch = master;
 				kind = branch;
 			};
 		};

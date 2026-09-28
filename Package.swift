@@ -5,7 +5,7 @@ import Foundation
 // JsonUI comes from GitHub. Set JSONUI_PATH to a local checkout to build
 // against it (used by CI on Linux and while developing both repos together).
 let jsonUI: Package.Dependency = ProcessInfo.processInfo.environment["JSONUI_PATH"].map { .package(path: $0) }
-    ?? .package(url: "https://github.com/bclnet/JsonUI", branch: "claude/ios-android-form-libraries-2jjfw5")
+    ?? .package(url: "https://github.com/bclnet/JsonUI", branch: "master")
 
 // The manifest stays at the repository root so the package can be added by URL;
 // the Swift sources live in ios/ next to the Android project in android/.

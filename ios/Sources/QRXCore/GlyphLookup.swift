@@ -9,6 +9,7 @@
 //
 
 import Foundation
+import JsonUICore
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
@@ -18,6 +19,8 @@ public enum GlyphLookupError: Error, CustomStringConvertible {
     case bluetoothUnavailable
     case http(status: Int)
     case blue(status: Int, message: String?)
+    case fragments(String)
+    case tooManyFragments
 
     public var description: String {
         switch self {
@@ -25,6 +28,8 @@ public enum GlyphLookupError: Error, CustomStringConvertible {
         case .bluetoothUnavailable: return "Bluetooth is not available for blue:// glyphs"
         case .http(let status): return "HTTP \(status)"
         case .blue(let status, let message): return "BLUE \(status)\(message.map { ": " + $0 } ?? "")"
+        case .fragments(let detail): return "fragments: \(detail)"
+        case .tooManyFragments: return "too many fragment documents"
         }
     }
 }
@@ -66,7 +71,12 @@ public final class GlyphLookup {
         self.blue = blue
     }
 
+    /// How many fragment documents one glyph may pull in.
+    public var maxFragmentDocuments = 16
+
     /// Resolves `barcode`. Results are cached by payload; `refresh` bypasses the cache.
+    /// JSON fragments (`$ref`) in the document are fetched the same way the document was and resolved
+    /// against its URL before it is parsed.
     public func lookup(_ barcode: GlyphBarcode, refresh: Bool = false, completion: @escaping (Result<GlyphDocument, Error>) -> Void) {
         if !refresh, let cached = cached(barcode.id) { completion(.success(cached)); return }
         let finish: (Result<GlyphDocument, Error>) -> Void = { [weak self] result in
@@ -74,22 +84,79 @@ public final class GlyphLookup {
             completion(result)
         }
         if let inline = barcode.inlineDocument {
-            finish(Result { try GlyphDocument(json: inline) })
+            resolve(json: .success(inline), base: nil, completion: finish)
             return
         }
         if let target = barcode.blueTarget {
             guard let blue = blue else { finish(.failure(GlyphLookupError.bluetoothUnavailable)); return }
-            blue.send(.get(target.path), to: target.device) { result in
-                finish(result.flatMap { response in
-                    guard response.isSuccess else { return .failure(GlyphLookupError.blue(status: response.statusCode, message: response.content)) }
-                    return Result { try GlyphDocument(json: response.content ?? "") }
-                })
+            let base = URL(string: "blue://\(target.device)\(target.path.hasPrefix("/") ? "" : "/")\(target.path)")
+            fetchBlue(target.path, device: target.device, blue: blue) { [weak self] result in
+                self?.resolve(json: result, base: base, completion: finish)
             }
             return
         }
         guard let url = barcode.url else { finish(.failure(GlyphLookupError.noContent)); return }
-        fetcher.fetch(url) { result in
-            finish(result.flatMap { data in Result { try GlyphDocument(data: data) } })
+        fetcher.fetch(url) { [weak self] result in
+            self?.resolve(json: result.map { String(decoding: $0, as: UTF8.self) }, base: url, completion: finish)
+        }
+    }
+
+    // MARK: - Fragments
+
+    private func fetchBlue(_ path: String, device: String, blue: BlueTransport, completion: @escaping (Result<String, Error>) -> Void) {
+        blue.send(.get(path), to: device) { result in
+            completion(result.flatMap { response in
+                guard response.isSuccess else { return .failure(GlyphLookupError.blue(status: response.statusCode, message: response.content)) }
+                return .success(response.content ?? "")
+            })
+        }
+    }
+
+    /// Fetches one fragment document: `http(s)` through the fetcher, `blue://device/path` through the transport.
+    private func fetchDocument(_ url: URL, completion: @escaping (Result<JsonValue, Error>) -> Void) {
+        let parse: (Result<String, Error>) -> Void = { result in completion(result.flatMap { text in Result { try JsonValue.parse(text) } }) }
+        if url.scheme == "blue" {
+            guard let blue = blue else { completion(.failure(GlyphLookupError.bluetoothUnavailable)); return }
+            fetchBlue(url.path, device: url.host ?? "*", blue: blue, completion: parse)
+        } else {
+            fetcher.fetch(url) { parse($0.map { String(decoding: $0, as: UTF8.self) }) }
+        }
+    }
+
+    private func resolve(json: Result<String, Error>, base: URL?, completion: @escaping (Result<GlyphDocument, Error>) -> Void) {
+        let value: JsonValue
+        do { value = try JsonValue.parse(try json.get()) } catch { completion(.failure(error)); return }
+        guard value.hasFragmentReferences else { completion(Result { try GlyphDocument(value: value) }); return }
+        let resolver = JsonFragmentResolver()
+        resolve(value, base: base, resolver: resolver, fetched: 0, completion: completion)
+    }
+
+    private func resolve(_ value: JsonValue, base: URL?, resolver: JsonFragmentResolver, fetched: Int, completion: @escaping (Result<GlyphDocument, Error>) -> Void) {
+        let missing = resolver.externalReferences(in: value, base: base)
+        if missing.isEmpty {
+            completion(Result { try GlyphDocument(value: try resolver.resolve(value, base: base)) })
+            return
+        }
+        guard fetched + missing.count <= maxFragmentDocuments else { completion(.failure(GlyphLookupError.tooManyFragments)); return }
+        let group = DispatchGroup()
+        var failure: Error?
+        let lock = NSLock()
+        for url in missing {
+            group.enter()
+            fetchDocument(url) { result in
+                lock.lock()
+                switch result {
+                case .success(let document): resolver.register(document, for: url)
+                case .failure(let error): failure = failure ?? GlyphLookupError.fragments("\(url.absoluteString): \(error)")
+                }
+                lock.unlock()
+                group.leave()
+            }
+        }
+        group.notify(queue: .global()) { [weak self] in
+            guard let self = self else { return }
+            if let failure = failure { completion(.failure(failure)); return }
+            self.resolve(value, base: base, resolver: resolver, fetched: fetched + missing.count, completion: completion)
         }
     }
 

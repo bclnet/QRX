@@ -69,3 +69,51 @@ final class GlyphLookupTests: XCTestCase {
         XCTAssertEqual("\(unavailable!)", "Bluetooth is not available for blue:// glyphs")
     }
 }
+
+final class GlyphFragmentTests: XCTestCase {
+    func testFragmentsAreFetchedRelativeToTheDocument() throws {
+        let fetcher = FakeFetcher()
+        fetcher.responses[URL(string: "https://x/scenes/bush.json")!] = .success(Data(##"{"_ui":{"fragments":{"idle":{"clip":0,"loop":true}}},"type":"Scene","actors":[{"id":"bush","body":{"$ref":"../bodies/box.json","animations":{"idle":{"$ref":"#idle"}}},"mind":{"$ref":"minds/bush.json","budget":{"tokens":10}}}]}"##.utf8))
+        fetcher.responses[URL(string: "https://x/bodies/box.json")!] = .success(Data(##"{"model":"https://x/box.glb","scale":0.1,"animations":{"sing":{"$ref":"clips.json#/sing"}}}"##.utf8))
+        fetcher.responses[URL(string: "https://x/bodies/clips.json")!] = .success(Data(#"{"sing":{"clip":0,"speed":2}}"#.utf8))
+        fetcher.responses[URL(string: "https://x/scenes/minds/bush.json")!] = .success(Data(#"{"persona":"a shrub","budget":{"tokens":99,"perTurn":50}}"#.utf8))
+        let lookup = GlyphLookup(fetcher: fetcher)
+        var document: GlyphDocument?
+        var failure: Error?
+        let done = expectation(description: "lookup")
+        lookup.lookup(GlyphBarcode(payload: "https://x/scenes/bush.json")) {
+            switch $0 { case .success(let d): document = d; case .failure(let e): failure = e }
+            done.fulfill()
+        }
+        wait(for: [done], timeout: 5)
+        XCTAssertNil(failure)
+        guard case .ui(let json)? = document?.content else { return XCTFail("expected a ui document") }
+        XCTAssertEqual(fetcher.calls, 4, "the document, two body fragments and the mind")
+        let actor = json.root["actors"][0]
+        XCTAssertEqual(actor["body"]["model"], "https://x/box.glb", "body fragment resolved relative to the document")
+        XCTAssertEqual(actor["body"]["animations"]["sing"]["speed"], 2, "nested fragment resolved relative to the body file")
+        XCTAssertEqual(actor["body"]["animations"]["idle"]["loop"], true, "local fragment from _ui.fragments")
+        XCTAssertEqual(actor["mind"]["persona"], "a shrub")
+        XCTAssertEqual(actor["mind"]["budget"]["tokens"], 10, "override beside $ref wins")
+        XCTAssertFalse(json.value.hasFragmentReferences)
+    }
+
+    func testMissingFragmentFails() {
+        let fetcher = FakeFetcher()
+        fetcher.responses[URL(string: "https://x/a.json")!] = .success(Data(##"{"_button":{},"text":{"$ref":"b.json#/text"}}"##.utf8))
+        let lookup = GlyphLookup(fetcher: fetcher)
+        var failure: Error?
+        let done = expectation(description: "lookup")
+        lookup.lookup(GlyphBarcode(payload: "https://x/a.json")) { if case .failure(let e) = $0 { failure = e }; done.fulfill() }
+        wait(for: [done], timeout: 5)
+        XCTAssertTrue("\(failure!)".contains("fragments: https://x/b.json"))
+    }
+
+    func testInlineDocumentsResolveLocalFragments() {
+        let lookup = GlyphLookup(fetcher: FakeFetcher())
+        var document: GlyphDocument?
+        lookup.lookup(GlyphBarcode(payload: "size: *2\n\n{\"_ui\":{\"fragments\":{\"t\":\"Hi\"}},\"type\":\"Text\",\"text\":{\"$ref\":\"#t\"}}")) { document = try? $0.get() }
+        guard case .ui(let json)? = document?.content else { return XCTFail() }
+        XCTAssertEqual(json.root["text"], "Hi")
+    }
+}

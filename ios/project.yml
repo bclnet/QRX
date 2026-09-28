@@ -10,10 +10,10 @@ options:
 packages:
   JsonUI:
     url: https://github.com/bclnet/JsonUI
-    branch: claude/ios-android-form-libraries-2jjfw5
+    branch: master
   JsonScene:
     url: https://github.com/bclnet/JsonScene
-    branch: claude/jsonscene
+    branch: master
   QRXCore:
     path: ..
 targets:

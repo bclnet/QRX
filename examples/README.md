@@ -9,9 +9,9 @@ into a QR code (any generator works, e.g. https://goqr.me) and point QRX at it.
 | [video.json](video.json) | `size: *2`<br>`https://raw.githubusercontent.com/bclnet/QRX/master/examples/video.json` |
 | [web.json](web.json) | `size: 10l10x20b10`<br>`https://raw.githubusercontent.com/bclnet/QRX/master/examples/web.json` |
 | [button.json](button.json) | `https://raw.githubusercontent.com/bclnet/QRX/master/examples/button.json` |
-| [ui-login.json](ui-login.json) | `size: *3`<br>`https://raw.githubusercontent.com/bclnet/QRX/master/examples/ui-login.json` |
+| [ui-login.json](ui-login.json) (fields from `shared/fields.json` fragments) | `size: *3`<br>`https://raw.githubusercontent.com/bclnet/QRX/master/examples/ui-login.json` |
 | [ui-survey.json](ui-survey.json) | `https://raw.githubusercontent.com/bclnet/QRX/master/examples/ui-survey.json` |
-| [scene-bush.json](scene-bush.json) | `size: *4`<br>`https://raw.githubusercontent.com/bclnet/QRX/master/examples/scene-bush.json` (a [JsonScene](https://github.com/bclnet/JsonScene) `Scene`: the singing bush stands on the code and sings when tapped) |
+| [scene-bush.json](scene-bush.json) | `size: *4`<br>`https://raw.githubusercontent.com/bclnet/QRX/master/examples/scene-bush.json` (a [JsonScene](https://github.com/bclnet/JsonScene) `Scene`: the singing bush stands on the code and sings when tapped; its body and mind are `$ref` fragments served from JsonScene and JsonMind) |
 | inline | `size: *2`<br><br>`{"_button":{},"text":"Inline glyph"}` |
 | Bluetooth | `blue://QRX/glyph/ui-login` (served by another QRX device, see docs/BLUE.md) |
 
