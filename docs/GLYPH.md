@@ -4,6 +4,11 @@ A *glyph* is a QR code whose payload tells QRX what to show on top of the
 code. The payload is a small text header; the content is a JSON *glyph
 document*, either fetched from a URL or embedded inline.
 
+The word names the whole unit someone makes and shares: the code, its header,
+the document and where it sits. It is what a code *carries*. The pattern the
+camera tracks to find a pose is a *marker*; QRX keeps the two words apart so
+that content types are `Glyph…` and tracking code says marker or pose.
+
 ## Payload
 
 ```

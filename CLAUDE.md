@@ -5,7 +5,20 @@ resolves them to JsonUI documents and places the content in the room with
 AR. Three targets: iOS (SwiftUI + ARKit), Android phone (Compose + CameraX +
 ML Kit), Meta Quest (Meta Spatial SDK). Glyph content can be a JsonUI form, a
 web view, an image, a video, or a JsonScene with actors whose minds get
-tokens through TokenX. Started as a spike named Glyph; that name is gone.
+tokens through TokenX. QRX began as a spike that shipped a separate library
+named Glyph; that library was folded into QRX, and *glyph* stayed as the
+product term.
+
+## Naming
+
+- A **glyph** is the whole unit a user makes and shares: the QR code, its payload header
+  (size, flags, URL), the resolved document and its placement. Types follow that:
+  `GlyphBarcode`, `GlyphDocument`, `GlyphSize`, `GlyphPlacement`, `GlyphLookup`, `FoundGlyph`.
+  Keep the word for anything about what a code carries and shows.
+- A **marker** is the tracking side: a pattern the camera finds and derives a pose from.
+  Use it (and "marker pose") for pose estimation and anchoring, never for content.
+- **code** on its own means the QR code, or the `code` anchor kind in a JsonScene. Do not
+  name types after it (`CodeDocument` would read as source code).
 
 Docs: `docs/GLYPH.md` (glyph and lookup format), `docs/BLUE.md` (the BLUE/1.0
 Bluetooth protocol for sharing glyphs between devices), `docs/ARCHITECTURE.md`.
