@@ -68,13 +68,6 @@ class BlueGlyphService(initial: Map<String, GlyphDocument> = emptyMap()) {
     val router = BlueRouter()
     private val documents = ConcurrentHashMap<String, GlyphDocument>(initial)
 
-    /** Reads the LED colour last written; null when no board is connected. */
-    var ledColor: () -> LedColor? = { null }
-    /** Writes a colour to the board; false when no board is connected. */
-    var setLedColor: (LedColor) -> Boolean = { false }
-    /** The board's battery level 0–100, null when unknown. */
-    var batteryLevel: () -> Int? = { null }
-
     init { install() }
 
     fun share(document: GlyphDocument, name: String) { documents[name] = document }
@@ -98,17 +91,6 @@ class BlueGlyphService(initial: Map<String, GlyphDocument> = emptyMap()) {
             } catch (e: Exception) {
                 BlueResponse.error(400, e.message)
             }
-        }
-        router.get("/led") { _, _ ->
-            ledColor()?.let { BlueResponse.json(it.json.toJsonString()) } ?: BlueResponse.error(503, "no LED board connected")
-        }
-        router.post("/led") { request, _ ->
-            val color = request.body?.let { runCatching { LedColor.fromJson(parseJson(it)) }.getOrNull() }
-                ?: return@post BlueResponse.error(400, "expected {\"r\":0-255,\"g\":0-255,\"b\":0-255}")
-            if (setLedColor(color)) BlueResponse.json(color.json.toJsonString()) else BlueResponse.error(503, "no LED board connected")
-        }
-        router.get("/battery") { _, _ ->
-            batteryLevel()?.let { BlueResponse.json(jsonObjectOf("level" to it).toJsonString()) } ?: BlueResponse.error(503, "no LED board connected")
         }
     }
 }

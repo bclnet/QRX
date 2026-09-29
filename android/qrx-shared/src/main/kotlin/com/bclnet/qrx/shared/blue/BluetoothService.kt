@@ -2,9 +2,9 @@
  * BluetoothService.kt
  * QRX
  *
- * Facade over the three Bluetooth roles: the BLUE/1.0 client (BlueGattClient),
- * the BLUE/1.0 server (BlueGattServer) and the Particle LED board client
- * (ParticleLedClient). Android counterpart of the iOS BluetoothService.
+ * Facade over the two Bluetooth roles: the BLUE/1.0 client (BlueGattClient)
+ * and the BLUE/1.0 server (BlueGattServer). Android counterpart of the iOS
+ * BluetoothService.
  */
 package com.bclnet.qrx.shared.blue
 
@@ -26,7 +26,6 @@ class BluetoothService(private val context: Context) {
     val glyphService = BlueGlyphService()
     val client = BlueGattClient(context, adapter)
     val server = BlueGattServer(context, adapter, glyphService.router)
-    val led = ParticleLedClient(context, adapter)
 
     var serverEnabled: Boolean by mutableStateOf(prefs.getBoolean("server", false))
         private set
@@ -35,9 +34,6 @@ class BluetoothService(private val context: Context) {
         private set
 
     init {
-        glyphService.ledColor = { if (led.isConnected) led.color else null }
-        glyphService.setLedColor = { led.write(it) }
-        glyphService.batteryLevel = { led.batteryLevel }
         server.localName = localName
     }
 
@@ -64,15 +60,13 @@ class BluetoothService(private val context: Context) {
     /** Call once permissions are granted. */
     fun start() {
         if (!isAvailable) return
-        led.start()
         if (serverEnabled) server.start()
     }
 
     fun stop() {
-        led.stop()
         server.stop()
         client.close()
     }
 
-    val isAnythingConnected: Boolean get() = led.isConnected || server.subscriberCount > 0 || client.isConnected
+    val isAnythingConnected: Boolean get() = server.subscriberCount > 0 || client.isConnected
 }

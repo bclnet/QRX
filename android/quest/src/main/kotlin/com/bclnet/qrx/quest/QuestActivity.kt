@@ -5,7 +5,7 @@
  * The Quest app: a Meta Spatial SDK scene with passthrough on, the QR codes
  * seen by the passthrough camera turned into glyph panels placed in the
  * room where the codes are, and a control panel with the status, settings
- * and Bluetooth (BLUE/1.0 server, nearby devices, Particle LED board).
+ * and Bluetooth (BLUE/1.0 server, nearby devices).
  */
 package com.bclnet.qrx.quest
 

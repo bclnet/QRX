@@ -127,11 +127,6 @@ final class AppModel: ObservableObject {
             }
             return nil
         }
-        actions.register("led") { [weak self] _, args, _ in
-            guard let color = LedColor(json: args) else { return ["error": "expected r, g, b"] }
-            let written = self?.bluetooth.led.write(color) ?? false
-            return ["written": .bool(written)]
-        }
         actions.register("dismiss") { [weak self] _, _, _ in
             Task { @MainActor in self?.forgetGlyphs() }
             return nil

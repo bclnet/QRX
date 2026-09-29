@@ -4,7 +4,7 @@
  *
  * State shared by the phone and Quest apps: the glyphs found so far, their
  * documents, the status message, toasts, and the JsonUI host actions
- * offered to `_ui` glyphs (`toast`, `open`, `led`, `dismiss`). The Android
+ * offered to `_ui` glyphs (`toast`, `open`, `dismiss`). The Android
  * counterpart of the iOS AppModel.
  */
 package com.bclnet.qrx.shared
@@ -28,7 +28,6 @@ import com.bclnet.jsonui.toJsonString
 import com.bclnet.qrx.core.GlyphBarcode
 import com.bclnet.qrx.core.GlyphDocument
 import com.bclnet.qrx.core.GlyphLookup
-import com.bclnet.qrx.core.blue.LedColor
 import com.bclnet.qrx.shared.ai.AiService
 import com.bclnet.qrx.shared.blue.BluetoothService
 import com.bclnet.qrx.shared.speech.SpeechInput
@@ -123,10 +122,6 @@ class GlyphSession(private val context: Context, val bluetooth: BluetoothService
                 runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
             }
             null
-        })
-        actions.register("led", JsonActionHandler { _, args, _ ->
-            val color = LedColor.fromJson(args) ?: return@JsonActionHandler jsonObjectOf("error" to "expected r, g, b")
-            jsonObjectOf("written" to bluetooth.led.write(color))
         })
         actions.register("dismiss", JsonActionHandler { _, _, _ -> forgetGlyphs(); null })
         actions.fallback = JsonActionHandler { name, args, _ -> showToast("$name ${args.toJsonString()}"); null }

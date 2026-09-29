@@ -5,11 +5,7 @@ import com.bclnet.jsonui.toJsonString
 import com.bclnet.qrx.core.blue.BlueGlyphService
 import com.bclnet.qrx.core.blue.BlueRequest
 import com.bclnet.qrx.core.blue.BlueRouter
-import com.bclnet.qrx.core.blue.LedColor
-import com.bclnet.qrx.core.blue.ParticleUUIDs
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class BlueRouterTest {
@@ -29,10 +25,6 @@ class BlueRouterTest {
     @Test
     fun glyphServiceRoutes() {
         val service = BlueGlyphService()
-        var written: LedColor? = null
-        service.setLedColor = { written = it; true }
-        service.ledColor = { written }
-        service.batteryLevel = { 87 }
         val router = service.router
 
         assertEquals("pong", router.handle(BlueRequest.get("/ping")).content)
@@ -46,29 +38,9 @@ class BlueRouterTest {
         assertEquals(GlyphContent.Button("Menu", null), GlyphDocument.parse(fetched.content!!).content)
         assertEquals(400, router.handle(BlueRequest.post("/glyph/bad", "nope")).statusCode)
 
-        assertEquals(503, router.handle(BlueRequest.get("/led")).statusCode)
-        assertEquals("""{"b":0,"g":10,"r":255}""", router.handle(BlueRequest.post("/led", """{"r":255,"g":10,"b":0}""")).content)
-        assertEquals(LedColor(255, 10, 0), written)
-        assertEquals("""{"b":0,"g":10,"r":255}""", router.handle(BlueRequest.get("/led")).content)
-        assertEquals(400, router.handle(BlueRequest.post("/led", """{"r":1}""")).statusCode)
-        assertEquals("""{"level":87}""", router.handle(BlueRequest.get("/battery")).content)
-
         service.share(GlyphDocument.button("Shared"), "shared")
         assertEquals(listOf("menu", "shared"), service.names)
         service.unshare("menu")
         assertEquals(listOf("shared"), service.names)
-    }
-
-    @Test
-    fun ledColor() {
-        assertEquals(LedColor(255, 0, 13), LedColor.fromJson(jsonObjectOf("r" to 300, "g" to -5, "b" to 12.6)))
-        assertEquals(LedColor(1, 2, 3), LedColor.fromJson(jsonObjectOf("red" to 1, "green" to 2, "blue" to 3)))
-        assertNull(LedColor.fromJson(jsonObjectOf("r" to 1)))
-        val color = LedColor(9, 8, 7)
-        assertEquals(9.toByte(), color.bytes(LedColor.Channel.Red)[0])
-        assertEquals(7.toByte(), color.bytes(LedColor.Channel.Blue)[0])
-        assertEquals(ParticleUUIDs.GREEN_LED, LedColor.Channel.Green.characteristic)
-        assertEquals("""{"b":7,"g":8,"r":9}""", color.json.toJsonString())
-        assertThrows(IllegalArgumentException::class.java) { LedColor(256, 0, 0) }
     }
 }

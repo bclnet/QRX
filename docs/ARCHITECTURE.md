@@ -28,9 +28,9 @@ show the content anchored on the code. Three apps share the same formats:
                  platform renderer anchored on the code
 ```
 
-* **Core** (`ios/Sources/QRXCore`, `android/qrx-core`): the layers above, plus the BLUE/1.0 protocol (requests, responses, chunk framer, router) and the Particle LED constants. Pure Swift / Kotlin, unit tested on Linux and the JVM. Mirrors of each other, file for file.
-* **Shared Android** (`android/qrx-shared`): camera + ML Kit scanning (`GlyphScanner`), the glyph content composables (`GlyphContent`), the Bluetooth service (`BlueGattServer`, `BlueGattClient`, `ParticleLedClient`, `BluePermissions`) and the settings panel. Used by both the phone and the Quest app.
-* **iOS app** (`ios/QRX`): `ARGlyphView` (ARKit session, `BarcodeDetector`, `GlyphFactory` placing SceneKit planes with SwiftUI content), `GlyphContentView`, `ChromeView`, and `BluetoothService` (`BlueCentral`, `BluePeripheral`, `ParticleLedClient`).
+* **Core** (`ios/Sources/QRXCore`, `android/qrx-core`): the layers above, plus the BLUE/1.0 protocol (requests, responses, chunk framer, router). Pure Swift / Kotlin, unit tested on Linux and the JVM. Mirrors of each other, file for file.
+* **Shared Android** (`android/qrx-shared`): camera + ML Kit scanning (`GlyphScanner`), the glyph content composables (`GlyphContent`), the Bluetooth service (`BlueGattServer`, `BlueGattClient`, `BluePermissions`) and the settings panel. Used by both the phone and the Quest app.
+* **iOS app** (`ios/QRX`): `ARGlyphView` (ARKit session, `BarcodeDetector`, `GlyphFactory` placing SceneKit planes with SwiftUI content), `GlyphContentView`, `ChromeView`, and `BluetoothService` (`BlueCentral`, `BluePeripheral`).
 
 ## Anchoring
 
@@ -40,15 +40,15 @@ show the content anchored on the code. Three apps share the same formats:
 
 ## Bluetooth
 
-See [BLUE.md](BLUE.md). Each app runs a client (used by `blue://` glyphs and
-the LED board) and can run the server that shares its glyph documents.
+See [BLUE.md](BLUE.md). Each app runs a client (used by `blue://` glyphs)
+and can run the server that shares its glyph documents.
 
 ## Testing
 
 | suite | runs on |
 | --- | --- |
 | `swift test` (QRXCore: sizes, payloads, documents, protocol, framer, router, lookup) | Linux, macOS |
-| `ios/QRXTests` (LED byte packing, GATT chunk round trips, JsonUI action wiring) | Xcode |
+| `ios/QRXTests` (GATT chunk round trips, JsonUI action wiring) | Xcode |
 | `android/qrx-core` JVM tests (same coverage as QRXCore) | JVM |
 | `android/qrx-shared` JVM tests (`GlyphPlacement`, Blue chunk assembly) | JVM |
 | `android/quest` JVM tests (`QrPoseEstimator`) | JVM |

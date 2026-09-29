@@ -2,9 +2,8 @@
 //  BluetoothService.swift
 //  QRX
 //
-//  Facade over the three Bluetooth roles: the BLUE/1.0 client (BlueCentral),
-//  the BLUE/1.0 server (BluePeripheral) and the Particle LED board client
-//  (ParticleLedClient).
+//  Facade over the two Bluetooth roles: the BLUE/1.0 client (BlueCentral)
+//  and the BLUE/1.0 server (BluePeripheral).
 //
 
 import Foundation
@@ -16,7 +15,6 @@ final class BluetoothService: ObservableObject {
     let glyphService = BlueGlyphService()
     let central: BlueCentral
     let peripheral: BluePeripheral
-    let led = ParticleLedClient()
 
     @Published var serverEnabled: Bool {
         didSet { UserDefaults.standard.set(serverEnabled, forKey: "qrx.blue.server") }
@@ -36,11 +34,8 @@ final class BluetoothService: ObservableObject {
         localName = name
         central = BlueCentral()
         peripheral = BluePeripheral(router: glyphService.router, localName: name)
-        glyphService.ledColor = { [led] in led.isConnected ? led.color : nil }
-        glyphService.setLedColor = { [led] color in led.write(color) }
-        glyphService.batteryLevel = { [led] in led.batteryLevel }
         // Re-publish child changes so SwiftUI views observing the service update.
-        for publisher in [central.objectWillChange.eraseToAnyPublisher(), peripheral.objectWillChange.eraseToAnyPublisher(), led.objectWillChange.eraseToAnyPublisher()] {
+        for publisher in [central.objectWillChange.eraseToAnyPublisher(), peripheral.objectWillChange.eraseToAnyPublisher()] {
             publisher.sink { [weak self] _ in self?.objectWillChange.send() }.store(in: &cancellables)
         }
     }
@@ -53,8 +48,6 @@ final class BluetoothService: ObservableObject {
         #endif
     }
 
-    func startLedClient() { led.start() }
-
     func startServerIfEnabled() { if serverEnabled { peripheral.start() } }
 
     func setServerEnabled(_ enabled: Bool) {
@@ -64,7 +57,7 @@ final class BluetoothService: ObservableObject {
 
     var serverState: String { peripheral.state }
 
-    var isAnythingConnected: Bool { led.isConnected || peripheral.subscriberCount > 0 || central.isConnected }
+    var isAnythingConnected: Bool { peripheral.subscriberCount > 0 || central.isConnected }
 }
 
 #if os(iOS)

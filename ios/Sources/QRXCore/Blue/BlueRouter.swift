@@ -73,13 +73,6 @@ public final class BlueGlyphService {
     private var documents: [String: GlyphDocument] = [:]
     private let lock = NSLock()
 
-    /// Reads the LED colour last written; nil when no board is connected.
-    public var ledColor: () -> LedColor? = { nil }
-    /// Writes a colour to the board; returns false when no board is connected.
-    public var setLedColor: (LedColor) -> Bool = { _ in false }
-    /// The board's battery level 0–100, nil when unknown.
-    public var batteryLevel: () -> Int? = { nil }
-
     public init(documents: [String: GlyphDocument] = [:]) {
         self.documents = documents
         install()
@@ -114,18 +107,6 @@ public final class BlueGlyphService {
             } catch {
                 return .error(400, "\(error)")
             }
-        }
-        router.get("/led") { [unowned self] _, _ in
-            guard let color = self.ledColor() else { return .error(503, "no LED board connected") }
-            return .json(color.json.jsonString())
-        }
-        router.post("/led") { [unowned self] request, _ in
-            guard let body = request.body, let value = try? JsonValue.parse(body), let color = LedColor(json: value) else { return .error(400, "expected {\"r\":0-255,\"g\":0-255,\"b\":0-255}") }
-            return self.setLedColor(color) ? .json(color.json.jsonString()) : .error(503, "no LED board connected")
-        }
-        router.get("/battery") { [unowned self] _, _ in
-            guard let level = self.batteryLevel() else { return .error(503, "no LED board connected") }
-            return .json(JsonValue.object(["level": .number(Double(level))]).jsonString())
         }
     }
 }

@@ -14,9 +14,6 @@ final class AppModelTests: XCTestCase {
         runtime.context.perform(.host(name: "unknownAction", args: ["x": 1]))
         await Task.yield()
         XCTAssertEqual(model.toast, #"unknownAction {"x":1}"#)
-        let led = model.actions.invoke("led", args: ["r": 1, "g": 2, "b": 3], context: runtime.context)
-        XCTAssertEqual(led, ["written": false], "no board connected")
-        XCTAssertEqual(model.bluetooth.led.color, LedColor(red: 1, green: 2, blue: 3))
     }
 
     func testResolveInlineGlyph() async {

@@ -19,7 +19,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>QRX shares glyphs with nearby QRX devices and drives Particle LED boards over Bluetooth.</string>
+	<string>QRX shares glyphs with nearby QRX devices over Bluetooth.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>QRX looks through the camera to find QR glyphs and place their content in the room.</string>
 	<key>NSLocalNetworkUsageDescription</key>

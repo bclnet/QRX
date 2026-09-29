@@ -5,9 +5,7 @@ resolves them to JsonUI documents and places the content in the room with
 AR. Three targets: iOS (SwiftUI + ARKit), Android phone (Compose + CameraX +
 ML Kit), Meta Quest (Meta Spatial SDK). Glyph content can be a JsonUI form, a
 web view, an image, a video, or a JsonScene with actors whose minds get
-tokens through TokenX. QRX began as a spike that shipped a separate library
-named Glyph; that library was folded into QRX, and *glyph* stayed as the
-product term.
+tokens through TokenX.
 
 ## Naming
 
@@ -82,6 +80,9 @@ Install APKs with `adb install -r`; the Quest needs developer mode.
 - Permissions: camera, Bluetooth, microphone, speech, local network on iOS; CAMERA,
   BLUETOOTH_*, RECORD_AUDIO on Android (`BluePermissions.required`).
 - Fragment overrides are shallow; tests must not assume a deep merge.
+- `extras/` holds code that is not compiled: worked examples kept for reference (the Particle
+  LED board client that drove the Bluetooth layer). Nothing under it may be referenced from
+  the apps, the docs or the settings screens.
 
 ## Gotchas
 

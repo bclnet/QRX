@@ -100,7 +100,7 @@ fun GlyphContentView(document: GlyphDocument, session: GlyphSession, modifier: M
 }
 
 /**
- * Hosts a JsonUI document with the session's host actions (toast, open, led, dismiss).
+ * Hosts a JsonUI document with the session's host actions (toast, open, dismiss).
  * A document whose root is a `Scene` (JsonScene) fills the card with the 3D stage instead of a scrolling form.
  */
 @Composable

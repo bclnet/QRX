@@ -40,8 +40,7 @@ what you say is transcribed on the device and given to the actors as a
 
 QRX has a Bluetooth layer on all three platforms (`docs/BLUE.md`):
 
-* **BLUE/1.0**, an HTTP-like text protocol over a GATT service. Every app can run the *server* (sharing its glyph documents, the LED colour and the battery level) and the *client* (used when a code says `blue://<device>/glyph/<name>`, so glyphs work with no network).
-* A **Particle LED board** client (three LED characteristics, battery notifications), with sliders in the settings panel and the `led` host action for `_ui` glyphs.
+* **BLUE/1.0**, an HTTP-like text protocol over a GATT service. Every app can run the *server* (sharing its glyph documents) and the *client* (used when a code says `blue://<device>/glyph/<name>`, so glyphs work with no network).
 
 ## Building
 

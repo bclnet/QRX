@@ -17,10 +17,6 @@ final class BlueRouterTests: XCTestCase {
 
     func testGlyphServiceRoutes() throws {
         let service = BlueGlyphService()
-        var written: LedColor?
-        service.setLedColor = { written = $0; return true }
-        service.ledColor = { written }
-        service.batteryLevel = { 87 }
         let router = service.router
 
         XCTAssertEqual(router.handle(.get("/ping")).content, "pong")
@@ -35,27 +31,9 @@ final class BlueRouterTests: XCTestCase {
         XCTAssertEqual(try GlyphDocument(json: fetched.content!).content, .button(text: "Menu", action: nil))
         XCTAssertEqual(router.handle(.post("/glyph/bad", json: "nope")).statusCode, 400)
 
-        XCTAssertEqual(router.handle(.get("/led")).statusCode, 503)
-        XCTAssertEqual(router.handle(.post("/led", json: #"{"r":255,"g":10,"b":0}"#)).content, #"{"b":0,"g":10,"r":255}"#)
-        XCTAssertEqual(written, LedColor(red: 255, green: 10, blue: 0))
-        XCTAssertEqual(router.handle(.get("/led")).content, #"{"b":0,"g":10,"r":255}"#)
-        XCTAssertEqual(router.handle(.post("/led", json: #"{"r":1}"#)).statusCode, 400)
-        XCTAssertEqual(router.handle(.get("/battery")).content, #"{"level":87}"#)
-
         service.share(.button("Shared"), as: "shared")
         XCTAssertEqual(service.names, ["menu", "shared"])
         service.unshare("menu")
         XCTAssertEqual(service.names, ["shared"])
-    }
-
-    func testLedColor() {
-        XCTAssertEqual(LedColor(json: ["r": 300, "g": -5, "b": 12.6]), LedColor(red: 255, green: 0, blue: 13))
-        XCTAssertEqual(LedColor(json: ["red": 1, "green": 2, "blue": 3]), LedColor(red: 1, green: 2, blue: 3))
-        XCTAssertNil(LedColor(json: ["r": 1]))
-        let color = LedColor(red: 9, green: 8, blue: 7)
-        XCTAssertEqual(color.data(for: .red), Data([9]))
-        XCTAssertEqual(color.data(for: .blue), Data([7]))
-        XCTAssertEqual(LedColor.Channel.green.characteristicUUID, ParticleUUIDs.greenLED)
-        XCTAssertEqual(color.json.jsonString(), #"{"b":7,"g":8,"r":9}"#)
     }
 }

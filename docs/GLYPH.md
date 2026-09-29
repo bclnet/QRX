@@ -82,6 +82,5 @@ holds type options; the other keys are the content.
 Unknown types are shown as a placeholder with the type name.
 
 `_ui` glyphs get the host actions `toast` (shows `args.message`), `open`
-(opens `args.url`), `led` (sets the Bluetooth LED, `args.r/g/b`) and
-`dismiss`; the `submitSurvey`-style names in the examples are reported by the
+(opens `args.url`) and `dismiss`; the `submitSurvey`-style names in the examples are reported by the
 app's default fallback handler.

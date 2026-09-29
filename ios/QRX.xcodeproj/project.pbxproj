@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -41,7 +41,6 @@
 		F01FD6DC0869AF4740C7DB40 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = A3CFA339500FA5B16084F3BD /* examples */; };
 		F4C5E621BEC789FF6CD91E3B /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D1E8E63F569161C2552D8D /* ARKit.framework */; };
 		F88C523EDAF02C8D3E7DFC37 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F13F333B7C821766EF3CF /* AIService.swift */; };
-		FCA3475AC411D1498A61E23C /* ParticleLedClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00135BDDE9CB0BD5DF9D7506 /* ParticleLedClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +54,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00135BDDE9CB0BD5DF9D7506 /* ParticleLedClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleLedClient.swift; sourceTree = "<group>"; };
 		04D1E8E63F569161C2552D8D /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		05C7B2D9C52A24AEE4BB389B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0863EEC76E55D2C6DC1955BC /* qrx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = qrx; path = ..; sourceTree = SOURCE_ROOT; };
@@ -70,7 +68,7 @@
 		659A5879C7F84579BCAD2F6C /* QRXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRXApp.swift; sourceTree = "<group>"; };
 		6850A8B33FA9C56AACABE42F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		745943FF5C199E92CC58A0CE /* ChromeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChromeView.swift; sourceTree = "<group>"; };
-		76DA72610F7DF9B56E8E8679 /* QRX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		76DA72610F7DF9B56E8E8679 /* QRX.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = QRX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		803B009C851D408925B4C57B /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		865B2520E36C24227F825916 /* BlueGattFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueGattFlowTests.swift; sourceTree = "<group>"; };
 		86C91DF4431E165D185FDFA4 /* GlyphFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphFactory.swift; sourceTree = "<group>"; };
@@ -203,7 +201,6 @@
 				64A6D77F047230BB4083C544 /* BlueCentral.swift */,
 				D2E0959830CB83934D85FF06 /* BluePeripheral.swift */,
 				9562C44D95F7781BA5E44A1C /* BluetoothService.swift */,
-				00135BDDE9CB0BD5DF9D7506 /* ParticleLedClient.swift */,
 			);
 			path = Bluetooth;
 			sourceTree = "<group>";
@@ -289,6 +286,7 @@
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					07B342A866743D9E8032151D = {
+						DevelopmentTeam = DM9BJ949Y5;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -310,6 +308,7 @@
 				08C6887E34B35CB5DFC6FB84 /* XCRemoteSwiftPackageReference "TokenX" */,
 				EB72F1CEB4EE9CDE2BBC3D62 /* XCLocalSwiftPackageReference ".." */,
 			);
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -349,7 +348,6 @@
 				67F39320DE850DE4067D3F94 /* GlyphContentView.swift in Sources */,
 				C2C1F1E8B743FC5F7B8755A6 /* GlyphFactory.swift in Sources */,
 				33031EFF8E1115F6C10E43E7 /* GlyphPlane.swift in Sources */,
-				FCA3475AC411D1498A61E23C /* ParticleLedClient.swift in Sources */,
 				E82A27644D51CAA69EA746AA /* QRXApp.swift in Sources */,
 				B69177ABD7DB8D4C253DF5A6 /* SettingsView.swift in Sources */,
 				3B6F508A3E56AE9DBC737AF4 /* SpeechInput.swift in Sources */,

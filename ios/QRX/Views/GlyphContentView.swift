@@ -54,7 +54,7 @@ struct GlyphContentView: View {
     }
 }
 
-/// Hosts a JsonUI document with the app's host actions (toast, open, led, dismiss).
+/// Hosts a JsonUI document with the app's host actions (toast, open, dismiss).
 struct GlyphUIView: View {
     @EnvironmentObject private var model: AppModel
     @StateObject private var ui: JsonUIModel
