@@ -16,6 +16,8 @@ object BluePermissions {
     const val CAMERA = Manifest.permission.CAMERA
     /** Meta Quest passthrough camera access (Horizon OS v74+). */
     const val HEADSET_CAMERA = "horizonos.permission.HEADSET_CAMERA"
+    /** Meta Quest spatial data: MRUK's QR code tracker (and the room model) need it. */
+    const val USE_SCENE = "com.oculus.permission.USE_SCENE"
     const val RECORD_AUDIO = Manifest.permission.RECORD_AUDIO
 
     /** Bluetooth permissions for this API level (scan, connect, advertise). */
@@ -27,7 +29,7 @@ object BluePermissions {
         }
 
     /** Everything a QRX app asks for at startup. */
-    fun required(quest: Boolean = false): List<String> = listOf(CAMERA, RECORD_AUDIO) + (if (quest) listOf(HEADSET_CAMERA) else emptyList()) + bluetooth
+    fun required(quest: Boolean = false): List<String> = listOf(CAMERA, RECORD_AUDIO) + (if (quest) listOf(HEADSET_CAMERA, USE_SCENE) else emptyList()) + bluetooth
 
     fun has(context: Context, permission: String): Boolean =
         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED

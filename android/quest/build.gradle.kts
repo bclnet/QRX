@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.camerax.camera2)
     implementation(libs.meta.spatial.sdk)
     implementation(libs.meta.spatial.toolkit)
+    implementation(libs.meta.spatial.mruk)
     implementation(libs.meta.spatial.vr)
     implementation(libs.meta.spatial.compose)
     implementation(libs.activity.compose)

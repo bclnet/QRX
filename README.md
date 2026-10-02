@@ -9,13 +9,13 @@ protocol.
 | --- | --- | --- |
 | iOS | `ios/QRX.xcodeproj` (sources in `ios/QRX`, core package at the root `Package.swift`) | SwiftUI, ARKit image tracking + Vision, SceneKit, JsonUI, JsonScene, TokenX, Speech, CoreBluetooth |
 | Android | `android/app` | Jetpack Compose, CameraX + ML Kit, JsonUI Compose, JsonScene (Filament), TokenX, SpeechRecognizer, Bluetooth LE |
-| Meta Quest 3 | `android/quest` | Meta Spatial SDK 0.14 panels and entities, Passthrough Camera API + ML Kit, JsonUI Compose, JsonScene, TokenX, Bluetooth LE |
+| Meta Quest 3 | `android/quest` | Meta Spatial SDK 0.14 panels and entities, MRUK QR code tracking, Passthrough Camera API + ML Kit, JsonUI Compose, JsonScene, TokenX, Bluetooth LE |
 
 ## How it works
 
 1. The QR payload is a small text header (`docs/GLYPH.md`): optional `size:` rules, a URL (`https://…` or `blue://device/path`), flags, and an optional inline body. Documents may refer to shared JSON fragments (`$ref`), which QRX fetches the same way and resolves before rendering.
 2. The glyph document is JSON with one `_type` key: `_image`, `_avplayer`, `_web`, `_button` or `_ui`. A `_ui` document *is* a JsonUI document, so forms with state, validation scripts and host actions render natively on every platform. A `_ui` document whose root is a [JsonScene](https://github.com/bclnet/JsonScene) `Scene` puts animated 3D actors on the code (`examples/scene-bush.json`).
-3. The content is anchored on the code: ARKit tracks the code image on iOS, ML Kit re-detects it every frame on Android phones, and the Quest app estimates the code's pose from the passthrough camera and places a Spatial SDK panel in the room.
+3. The content is anchored on the code: ARKit tracks the code image on iOS, ML Kit re-detects it every frame on Android phones, and the Quest app puts a Spatial SDK panel on the code where the headset's QR tracker sees it.
 
 Example payload for a QR generator (`examples/README.md` has more):
 

@@ -44,7 +44,7 @@ fun ControlPanel(activity: QuestActivity) {
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp)) {
         Text("QRX", style = MaterialTheme.typography.headlineMedium)
         Text(session.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 4.dp))
-        Text(activity.cameraState, style = MaterialTheme.typography.bodySmall)
+        Text("${activity.trackerState} · ${activity.cameraState}", style = MaterialTheme.typography.bodySmall)
         Row(Modifier.fillMaxWidth().padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
             Text("${session.found.size} glyph${if (session.found.size == 1) "" else "s"}, ${activity.slots.size} placed", Modifier.weight(1f))
             Button(onClick = { activity.clearSlots() }) { Text("Forget glyphs") }

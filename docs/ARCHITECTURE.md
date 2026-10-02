@@ -8,7 +8,7 @@ show the content anchored on the code. Three apps share the same formats:
 | --- | --- | --- |
 | iOS | `ios/` (+ `Package.swift` at the root) | SwiftUI app lifecycle, ARKit image tracking + Vision QR detection, SceneKit planes, [JsonUI](https://github.com/bclnet/JsonUI) for `_ui` glyphs, CoreBluetooth |
 | Android | `android/app` | Jetpack Compose, CameraX + ML Kit barcode tracking with a 2D overlay anchored on the code, JsonUI Compose, Android Bluetooth LE |
-| Meta Quest 3 | `android/quest` | Meta Spatial SDK panels placed in the room from the QR pose, Passthrough Camera API (Camera2) + ML Kit, JsonUI Compose panels, Android Bluetooth LE |
+| Meta Quest 3 | `android/quest` | Meta Spatial SDK panels placed on the codes MRUK tracks, Passthrough Camera API (Camera2) + ML Kit as the fallback, JsonUI Compose panels, Android Bluetooth LE |
 
 ## Layers
 
@@ -36,7 +36,7 @@ show the content anchored on the code. Three apps share the same formats:
 
 * iOS: the detected code image becomes an `ARReferenceImage`, ARKit tracks it, and a plane sized by the glyph's `size:` is attached to the anchor.
 * Android phones re-detect the code every frame with ML Kit and place the content over its bounding box with the `size:` rules applied in image space (`GlyphPlacement`, tested). This needs no ARCore and works on every device with a camera.
-* Quest 3 estimates the code's pose from its corner points, the camera intrinsics and a 6 cm nominal code size (`QrPoseEstimator`, tested), converts it with the head pose into a world pose, and creates a Spatial SDK panel entity there. Panels are grabbable so they can be repositioned.
+* Quest 3 lets the headset track the codes: MRUK's QR code tracker (`Tracker.QrCode`, spatial data permission) gives each code an entity with its 6DoF world pose and payload, and the app puts a Spatial SDK panel on it (off the surface on a wall, standing on the code on a table). Codes the tracker cannot read (QR versions above 10) fall back to the passthrough camera scan: the pose is estimated from the corner points, the camera intrinsics and a 6 cm nominal code size (`QrPoseEstimator`, tested) and converted with the head pose. Panels are grabbable so they can be repositioned.
 
 ## Bluetooth
 

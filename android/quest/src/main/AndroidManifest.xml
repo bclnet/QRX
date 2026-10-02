@@ -2,7 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Passthrough Camera API (Horizon OS v74+). -->
     <uses-permission android:name="horizonos.permission.HEADSET_CAMERA" />
+    <!-- Spatial data: MRUK tracks QR codes in the room (6DoF pose + payload). The OpenXR loader
+         only enables marker tracking for packages that declare the horizonos.* name too. -->
+    <uses-permission android:name="com.oculus.permission.USE_SCENE" />
+    <uses-permission android:name="horizonos.permission.USE_SCENE" />
+    <!-- Tracked codes are spatial entities (anchors); the anchor extension is gated on this. -->
+    <uses-permission android:name="com.oculus.permission.USE_ANCHOR_API" />
+    <uses-permission android:name="horizonos.permission.USE_ANCHOR_API" />
     <uses-feature android:name="android.hardware.vr.headtracking" android:required="true" android:version="1" />
+    <!-- Horizon OS only grants passthrough (scene.enablePassthrough) to apps that declare the feature. -->
+    <uses-feature android:name="com.oculus.feature.PASSTHROUGH" android:required="true" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
