@@ -14,6 +14,8 @@ import QRXCore
 
 protocol BarcodeDetectorDelegate: AnyObject {
     func barcodeDetector(_ detector: BarcodeDetector, updated trackingImages: Set<ARReferenceImage>)
+    /// A code's document arrived, or its lookup failed. Called on the main thread.
+    func barcodeDetector(_ detector: BarcodeDetector, resolved result: BarcodeResult)
 }
 
 struct BarcodeResult {
@@ -21,15 +23,17 @@ struct BarcodeResult {
     let referenceImage: ARReferenceImage
     let barcode: GlyphBarcode
     var document: GlyphDocument?
+    /// Why the lookup failed; nil while it is running and once there is a document.
+    var error: String?
 }
 
 final class BarcodeDetector: NSObject {
     weak var delegate: BarcodeDetectorDelegate?
-    /// Resolves a payload into a document (AppModel.resolve).
-    var resolver: ((GlyphBarcode, @escaping (GlyphDocument?) -> Void) -> Void)?
+    /// Resolves a payload into a document, or the reason there is none (AppModel.resolve). Calls back on the main thread.
+    var resolver: ((GlyphBarcode, @escaping (GlyphDocument?, _ error: String?) -> Void) -> Void)?
 
-    /// Tracked codes by payload.
-    private(set) var found: [String: BarcodeResult] = [:]
+    /// Tracked codes by payload. Written on the Vision queue and read from others: only through `lock`.
+    private var found: [String: BarcodeResult] = [:]
     private let lock = NSLock()
     private var currentBuffer: CVPixelBuffer?
     private let visionQueue = DispatchQueue(label: "net.bcl.qrx.vision")
@@ -85,10 +89,18 @@ final class BarcodeDetector: NSObject {
             lock.unlock()
             changed = true
             DispatchQueue.main.async {
-                self.resolver?(barcode) { document in
+                self.resolver?(barcode) { document, error in
+                    guard document != nil || error != nil else { return }
                     self.lock.lock()
-                    if var entry = self.found[payload] { entry.document = document; self.found[payload] = entry }
+                    var resolved: BarcodeResult?
+                    if var entry = self.found[payload] {
+                        entry.document = document
+                        entry.error = error
+                        self.found[payload] = entry
+                        resolved = entry
+                    }
                     self.lock.unlock()
+                    if let resolved = resolved { self.delegate?.barcodeDetector(self, resolved: resolved) }
                 }
             }
         }

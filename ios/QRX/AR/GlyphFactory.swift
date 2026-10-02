@@ -22,10 +22,12 @@ final class GlyphFactory {
     weak var parent: UIView?
     private let model: AppModel
     private var hosts: [String: UIHostingController<AnyView>] = [:]
-    private var players: [String: AVPlayer] = [:]
+    private(set) var players: [String: AVPlayer] = [:]
     private var loopObservers: [String: NSObjectProtocol] = [:]
     /// JsonScene scenes standing on their codes, keyed by barcode id, with the JsonUI model owning their state.
-    private var scenes: [String: (model: JsonUIModel, controller: JsonSceneController)] = [:]
+    private(set) var scenes: [String: (model: JsonUIModel, controller: JsonSceneController)] = [:]
+    /// The node built for each code and the code's physical size, so it can be rebuilt when its document arrives.
+    private var nodes: [String: (node: SCNNode, physical: CGSize)] = [:]
 
     init(model: AppModel) {
         self.model = model
@@ -38,7 +40,45 @@ final class GlyphFactory {
     }
 
     func node(for anchor: ARImageAnchor, result: BarcodeResult) -> SCNNode {
-        let physical = anchor.referenceImage.physicalSize
+        node(physical: anchor.referenceImage.physicalSize, result: result)
+    }
+
+    /// `physical` is the tracked code's size in metres.
+    func node(physical: CGSize, result: BarcodeResult) -> SCNNode {
+        let node = SCNNode()
+        nodes[result.barcode.id] = (node, physical)
+        fill(node, physical: physical, result: result)
+        return node
+    }
+
+    /// Rebuilds the node of a code whose document arrived, or whose lookup failed, after it was first shown.
+    func refresh(_ result: BarcodeResult) {
+        let key = result.barcode.id
+        guard let entry = nodes[key] else { return }
+        entry.node.childNodes.forEach { $0.removeFromParentNode() }
+        release(key)
+        fill(entry.node, physical: entry.physical, result: result)
+    }
+
+    /// Drops everything built for the codes seen so far: "Forget", or the AR view going away.
+    func reset() {
+        for key in Set(hosts.keys).union(players.keys).union(loopObservers.keys) { release(key) }
+        for (_, scene) in scenes {
+            scene.controller.stop()
+            scene.controller.stage.removeFromParentNode()
+        }
+        scenes.removeAll()
+        nodes.removeAll()
+    }
+
+    /// Removes the hosted view and the video player of one code.
+    private func release(_ key: String) {
+        hosts.removeValue(forKey: key)?.view.removeFromSuperview()
+        players.removeValue(forKey: key)?.pause()
+        if let observer = loopObservers.removeValue(forKey: key) { NotificationCenter.default.removeObserver(observer) }
+    }
+
+    private func fill(_ node: SCNNode, physical: CGSize, result: BarcodeResult) {
         let size = result.barcode.size(for: .normal)
         let plane = GlyphPlane(size: size, physicalWidth: physical.width, physicalHeight: physical.height)
         let geometry = SCNPlane(width: CGFloat(plane.width), height: CGFloat(plane.height))
@@ -47,7 +87,6 @@ final class GlyphFactory {
         let planeNode = SCNNode(geometry: geometry)
         planeNode.eulerAngles.x = -.pi / 2
         planeNode.position = SCNVector3(Float(plane.offsetX), 0.001, Float(-plane.offsetY))
-        let node = SCNNode()
         node.addChildNode(planeNode)
 
         let pixelWidth = Int(max(256, min(1024, plane.width * 4000)))
@@ -62,12 +101,11 @@ final class GlyphFactory {
             attachVideo(url: url, loop: loop, to: geometry, key: result.barcode.id, size: CGSize(width: pixelWidth, height: pixelHeight))
         case nil:
             geometry.firstMaterial?.diffuse.contents = UIColor.white.withAlphaComponent(0.35)
-            attach(view: AnyView(GlyphPlaceholderView(text: result.barcode.id)), to: geometry, key: result.barcode.id, size: CGSize(width: pixelWidth, height: pixelHeight))
+            attach(view: AnyView(GlyphPlaceholderView(text: result.barcode.id, error: result.error)), to: geometry, key: result.barcode.id, size: CGSize(width: pixelWidth, height: pixelHeight))
         case .some(let content):
             let document = result.document!
             attach(view: AnyView(GlyphContentView(document: document, content: content).environmentObject(model)), to: geometry, key: result.barcode.id, size: CGSize(width: pixelWidth, height: pixelHeight))
         }
-        return node
     }
 
     /// Builds (or reuses) the scene controller for a `_ui` document whose root is a `Scene`.
@@ -147,12 +185,19 @@ final class GlyphFactory {
 
 struct GlyphPlaceholderView: View {
     let text: String
+    /// Why the glyph could not be loaded; nil while it is loading.
+    var error: String?
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 24).fill(Color.white.opacity(0.85))
             VStack(spacing: 8) {
-                ProgressView()
-                Text(text).font(.caption).lineLimit(3).multilineTextAlignment(.center).padding(.horizontal)
+                if let error = error {
+                    Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundColor(.orange)
+                    Text(error).font(.caption).lineLimit(4).multilineTextAlignment(.center).padding(.horizontal)
+                } else {
+                    ProgressView()
+                    Text(text).font(.caption).lineLimit(3).multilineTextAlignment(.center).padding(.horizontal)
+                }
             }
         }
     }

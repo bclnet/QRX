@@ -31,6 +31,7 @@
 		B6C510AE92C85327DF2E1B6C /* BlueGattFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865B2520E36C24227F825916 /* BlueGattFlowTests.swift */; };
 		C2C1F1E8B743FC5F7B8755A6 /* GlyphFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C91DF4431E165D185FDFA4 /* GlyphFactory.swift */; };
 		C729A214363930A07D2A5C76 /* GlyphPlaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */; };
+		D41F7A20C5E94B1A8E3F6B02 /* GlyphFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52A8B31D6FA4C2B9F407C13 /* GlyphFactoryTests.swift */; };
 		CF55A66D86CFB4D33CF33A3B /* JsonMindTokenX in Frameworks */ = {isa = PBXBuildFile; productRef = CEA4D3E3A513E073127E0B7D /* JsonMindTokenX */; };
 		D0FA7DFDD88791F8A9EAB5E9 /* BluePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0959830CB83934D85FF06 /* BluePeripheral.swift */; };
 		E166146FC50EE8CA0D64E8AB /* TokenXUI in Frameworks */ = {isa = PBXBuildFile; productRef = BBCCCBAE32BCA84CFF3826C3 /* TokenXUI */; };
@@ -80,6 +81,7 @@
 		A3CFA339500FA5B16084F3BD /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; name = examples; path = ../examples; sourceTree = SOURCE_ROOT; };
 		A7A8D8EF7FC44CD296D4747E /* QRXTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = QRXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphPlaneTests.swift; sourceTree = "<group>"; };
+		E52A8B31D6FA4C2B9F407C13 /* GlyphFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphFactoryTests.swift; sourceTree = "<group>"; };
 		CDBA99DFABFC58B84F2E2CE0 /* AppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelTests.swift; sourceTree = "<group>"; };
 		CF3B69AFEFA294CE333B6E8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D2E0959830CB83934D85FF06 /* BluePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluePeripheral.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 			children = (
 				CDBA99DFABFC58B84F2E2CE0 /* AppModelTests.swift */,
 				865B2520E36C24227F825916 /* BlueGattFlowTests.swift */,
+				E52A8B31D6FA4C2B9F407C13 /* GlyphFactoryTests.swift */,
 				C12B633BE4667CAB522FE5AD /* GlyphPlaneTests.swift */,
 			);
 			path = QRXTests;
@@ -360,6 +363,7 @@
 			files = (
 				31BC5B48E273F96183350550 /* AppModelTests.swift in Sources */,
 				B6C510AE92C85327DF2E1B6C /* BlueGattFlowTests.swift in Sources */,
+				D41F7A20C5E94B1A8E3F6B02 /* GlyphFactoryTests.swift in Sources */,
 				C729A214363930A07D2A5C76 /* GlyphPlaneTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

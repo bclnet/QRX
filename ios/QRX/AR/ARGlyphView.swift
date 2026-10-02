@@ -30,15 +30,12 @@ struct ARGlyphView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: ARSCNView, context: Context) {
-        if model.foundGlyphs.isEmpty && !context.coordinator.detector.found.isEmpty {
-            // "Forget" was pressed: restart tracking with no images.
-            context.coordinator.detector.reset()
-            context.coordinator.run(with: [], options: [.resetTracking, .removeExistingAnchors])
-        }
+        context.coordinator.forgetIfAsked()
     }
 
     static func dismantleUIView(_ uiView: ARSCNView, coordinator: Coordinator) {
         uiView.session.pause()
+        coordinator.factory.reset()
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
@@ -47,16 +44,30 @@ struct ARGlyphView: UIViewRepresentable {
         let detector = BarcodeDetector()
         let factory: GlyphFactory
         weak var view: ARSCNView?
+        /// The model's `forgetCount` this view last acted on.
+        private var forgetCount: Int
 
         @MainActor
         init(model: AppModel) {
             self.model = model
+            forgetCount = model.forgetCount
             factory = GlyphFactory(model: model)
             super.init()
             detector.delegate = self
             detector.resolver = { [weak model] barcode, completion in
                 Task { @MainActor in model?.resolve(barcode, completion: completion) }
             }
+        }
+
+        /// Restarts tracking with no images when "Forget" was pressed since the last look. The model says so
+        /// itself: its glyph list is also empty for a moment whenever the detector has just seen a new code.
+        @MainActor
+        func forgetIfAsked() {
+            guard forgetCount != model.forgetCount else { return }
+            forgetCount = model.forgetCount
+            detector.reset()
+            factory.reset()
+            run(with: [], options: [.resetTracking, .removeExistingAnchors])
         }
 
         func run(with images: Set<ARReferenceImage>, options: ARSession.RunOptions = [.removeExistingAnchors]) {
@@ -70,11 +81,22 @@ struct ARGlyphView: UIViewRepresentable {
             DispatchQueue.main.async { self.run(with: trackingImages) }
         }
 
-        func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-            guard let imageAnchor = anchor as? ARImageAnchor, let result = detector.result(for: imageAnchor.name) else { return nil }
-            // SceneKit may ask from its render thread; the factory builds UIKit views, so hop to main and wait.
+        func barcodeDetector(_ detector: BarcodeDetector, resolved result: BarcodeResult) {
+            // On main, in the same turn the result changed: a node built before this is rebuilt here,
+            // and one built after it already sees the document.
             let factory = self.factory
-            let build: @MainActor () -> SCNNode = { factory.node(for: imageAnchor, result: result) }
+            if Thread.isMainThread { MainActor.assumeIsolated { factory.refresh(result) } }
+            else { Task { @MainActor in factory.refresh(result) } }
+        }
+
+        func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+            guard let imageAnchor = anchor as? ARImageAnchor else { return nil }
+            // SceneKit may ask from its render thread; the factory builds UIKit views, so hop to main and wait.
+            // The result is read there too, so it cannot go stale between the read and the build.
+            let factory = self.factory, detector = self.detector
+            let build: @MainActor () -> SCNNode? = {
+                detector.result(for: imageAnchor.name).map { factory.node(for: imageAnchor, result: $0) }
+            }
             if Thread.isMainThread { return MainActor.assumeIsolated(build) }
             return DispatchQueue.main.sync { MainActor.assumeIsolated(build) }
         }
@@ -87,6 +109,27 @@ struct ARGlyphView: UIViewRepresentable {
         func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
             let pointOfView = renderer.pointOfView
             Task { @MainActor in self.factory.update(time: time, pointOfView: pointOfView) }
+        }
+
+        // MARK: Session state (ARSCNView passes these on to its delegate)
+
+        func session(_ session: ARSession, didFailWithError error: Error) {
+            let message = Coordinator.message(forFailure: error)
+            Task { @MainActor in self.model.sessionFailed(message) }
+        }
+
+        func sessionWasInterrupted(_ session: ARSession) {
+            Task { @MainActor in self.model.sessionInterrupted() }
+        }
+
+        func sessionInterruptionEnded(_ session: ARSession) {
+            Task { @MainActor in self.model.sessionInterruptionEnded() }
+        }
+
+        /// What the chrome says when the session fails; without camera access the view is only black.
+        static func message(forFailure error: Error) -> String {
+            if (error as? ARError)?.code == .cameraUnauthorized { return "QRX needs the camera. Allow it in Settings, under QRX." }
+            return "AR stopped: \(error.localizedDescription)"
         }
 
         /// Taps on a JsonScene actor reach its scene; the SwiftUI planes handle their own touches.

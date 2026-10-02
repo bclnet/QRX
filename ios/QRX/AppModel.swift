@@ -20,6 +20,8 @@ final class AppModel: ObservableObject {
     @Published var toast: String?
     @Published var showSettings = false
     @Published var foundGlyphs: [FoundGlyph] = []
+    /// Counts "Forget"; the AR view drops its tracked codes when this changes.
+    @Published private(set) var forgetCount = 0
 
     // MARK: Services
     let bluetooth = BluetoothService()
@@ -34,6 +36,11 @@ final class AppModel: ObservableObject {
     var heardHandlers: [(String) -> Void] = []
 
     private var toastTask: Task<Void, Never>?
+    private var cancellables: Set<AnyCancellable> = []
+    /// The title to return to when an interrupted AR session resumes.
+    private var titleBeforeInterruption: String?
+    /// Callbacks of sightings that came while the code's lookup was still running.
+    private var waiting: [String: [(GlyphDocument?, String?) -> Void]] = [:]
 
     struct FoundGlyph: Identifiable, Equatable {
         let id: String
@@ -47,6 +54,10 @@ final class AppModel: ObservableObject {
         registerActions()
         shareBundledExamples()
         speech.onHeard = { [weak self] text in self?.heard(text) }
+        // The chrome observes this model but shows speech and Bluetooth state, so re-publish their changes.
+        for publisher in [speech.objectWillChange.eraseToAnyPublisher(), bluetooth.objectWillChange.eraseToAnyPublisher()] {
+            publisher.sink { [weak self] _ in self?.objectWillChange.send() }.store(in: &cancellables)
+        }
     }
 
     /// Delivers recognised speech to every scene on the stage.
@@ -56,32 +67,34 @@ final class AppModel: ObservableObject {
     }
 
     func start() {
-        bluetooth.startLedClient()
         bluetooth.startServerIfEnabled()
     }
 
     // MARK: - Glyphs
 
-    /// Called by the barcode detector when a code is first seen; resolves its document.
-    func resolve(_ barcode: GlyphBarcode, completion: @escaping (GlyphDocument?) -> Void) {
+    /// Called by the barcode detector when a code is first seen; resolves its document, or says why there is none.
+    func resolve(_ barcode: GlyphBarcode, completion: @escaping (GlyphDocument?, _ error: String?) -> Void) {
         if let index = foundGlyphs.firstIndex(where: { $0.id == barcode.id }) {
-            completion(foundGlyphs[index].document)
+            let glyph = foundGlyphs[index]
+            if glyph.document == nil && glyph.error == nil { waiting[barcode.id, default: []].append(completion) }
+            else { completion(glyph.document, glyph.error) }
             return
         }
         foundGlyphs.append(FoundGlyph(id: barcode.id, barcode: barcode))
         title = barcode.isBluetooth ? "Fetching over Bluetooth…" : "Loading glyph…"
         lookup.lookup(barcode) { [weak self] result in
             Task { @MainActor in
-                guard let self = self, let index = self.foundGlyphs.firstIndex(where: { $0.id == barcode.id }) else { completion(nil); return }
+                guard let self = self, let index = self.foundGlyphs.firstIndex(where: { $0.id == barcode.id }) else { completion(nil, nil); return }
+                let callbacks = [completion] + (self.waiting.removeValue(forKey: barcode.id) ?? [])
                 switch result {
                 case .success(let document):
                     self.foundGlyphs[index].document = document
                     self.title = "Showing \(document.content.typeName) glyph"
-                    completion(document)
+                    callbacks.forEach { $0(document, nil) }
                 case .failure(let error):
                     self.foundGlyphs[index].error = "\(error)"
                     self.title = "Glyph failed: \(error)"
-                    completion(nil)
+                    callbacks.forEach { $0(nil, "\(error)") }
                 }
             }
         }
@@ -89,8 +102,31 @@ final class AppModel: ObservableObject {
 
     func forgetGlyphs() {
         foundGlyphs.removeAll()
+        waiting.removeAll()
+        forgetCount += 1
         lookup.clearCache()
         title = "Look for a QR code."
+    }
+
+    // MARK: - AR session
+
+    static let interruptedTitle = "Camera paused."
+
+    /// The AR session stopped; `message` stays in the chrome until tracking is restarted ("Forget" does that).
+    func sessionFailed(_ message: String) {
+        titleBeforeInterruption = nil
+        title = message
+    }
+
+    func sessionInterrupted() {
+        if titleBeforeInterruption == nil { titleBeforeInterruption = title }
+        title = AppModel.interruptedTitle
+    }
+
+    func sessionInterruptionEnded() {
+        // Only put the old title back if nothing else has replaced the paused one meanwhile.
+        if let previous = titleBeforeInterruption, title == AppModel.interruptedTitle { title = previous }
+        titleBeforeInterruption = nil
     }
 
     // MARK: - Actions
