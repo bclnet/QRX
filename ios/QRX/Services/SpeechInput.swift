@@ -19,11 +19,16 @@ final class SpeechInput: ObservableObject {
     @Published var error: String?
     /// Called with the final text when listening stops.
     var onHeard: ((String) -> Void)?
+    /// Called whenever listening stops, after the audio session is back to what it was.
+    var onStopped: (() -> Void)?
 
     private let recognizer = SFSpeechRecognizer()
     private let engine = AVAudioEngine()
     private var request: SFSpeechAudioBufferRecognitionRequest?
     private var task: SFSpeechRecognitionTask?
+    /// The audio session as it was before listening. Recording silences playback, so it is put back
+    /// when listening stops and glyph video is heard again.
+    private var audioBeforeListening: (category: AVAudioSession.Category, mode: AVAudioSession.Mode, options: AVAudioSession.CategoryOptions)?
 
     var isAvailable: Bool { recognizer?.isAvailable ?? false }
 
@@ -47,9 +52,7 @@ final class SpeechInput: ObservableObject {
     private func beginRecognition() {
         guard let recognizer = recognizer, recognizer.isAvailable else { error = "Speech recognition is unavailable."; return }
         do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.record, mode: .measurement, options: .duckOthers)
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
+            try beginListeningAudio()
             let request = SFSpeechAudioBufferRecognitionRequest()
             request.shouldReportPartialResults = true
             self.request = request
@@ -72,7 +75,25 @@ final class SpeechInput: ObservableObject {
         } catch {
             self.error = "Could not start listening: \(error.localizedDescription)"
             stop()
+            endListeningAudio()
         }
+    }
+
+    /// Switches the audio session to recording, remembering what it was.
+    func beginListeningAudio() throws {
+        let session = AVAudioSession.sharedInstance()
+        if audioBeforeListening == nil { audioBeforeListening = (session.category, session.mode, session.categoryOptions) }
+        try session.setCategory(.record, mode: .measurement, options: .duckOthers)
+        try session.setActive(true, options: .notifyOthersOnDeactivation)
+    }
+
+    /// Puts the audio session back the way `beginListeningAudio` found it.
+    func endListeningAudio() {
+        guard let before = audioBeforeListening else { return }
+        audioBeforeListening = nil
+        let session = AVAudioSession.sharedInstance()
+        try? session.setActive(false, options: .notifyOthersOnDeactivation)
+        try? session.setCategory(before.category, mode: before.mode, options: before.options)
     }
 
     func stop() {
@@ -83,9 +104,10 @@ final class SpeechInput: ObservableObject {
         task?.cancel()
         task = nil
         request = nil
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        endListeningAudio()
         let text = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
         isListening = false
+        onStopped?()
         if !text.isEmpty { onHeard?(text) }
     }
 }

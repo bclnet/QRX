@@ -32,6 +32,12 @@ final class GlyphFactory {
     init(model: AppModel) {
         self.model = model
         model.heardHandlers.append { [weak self] text in self?.heard(text) }
+        model.listeningEndedHandlers.append { [weak self] in self?.resumeVideo() }
+    }
+
+    /// Recording silences and can pause playback; once push-to-talk is over the glyph videos carry on.
+    func resumeVideo() {
+        for (_, player) in players { player.play() }
     }
 
     /// Recognised speech goes to every scene as a `spoken` event.

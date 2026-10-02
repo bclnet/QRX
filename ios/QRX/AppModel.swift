@@ -34,6 +34,8 @@ final class AppModel: ObservableObject {
     let actions = JsonActions()
     /// Scenes register here to receive what the user said.
     var heardHandlers: [(String) -> Void] = []
+    /// Called when push-to-talk stops and playback audio is available again.
+    var listeningEndedHandlers: [() -> Void] = []
 
     private var toastTask: Task<Void, Never>?
     private var cancellables: Set<AnyCancellable> = []
@@ -54,6 +56,7 @@ final class AppModel: ObservableObject {
         registerActions()
         shareBundledExamples()
         speech.onHeard = { [weak self] text in self?.heard(text) }
+        speech.onStopped = { [weak self] in self?.listeningEndedHandlers.forEach { $0() } }
         // The chrome observes this model but shows speech and Bluetooth state, so re-publish their changes.
         for publisher in [speech.objectWillChange.eraseToAnyPublisher(), bluetooth.objectWillChange.eraseToAnyPublisher()] {
             publisher.sink { [weak self] _ in self?.objectWillChange.send() }.store(in: &cancellables)
