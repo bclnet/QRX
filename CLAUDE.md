@@ -40,13 +40,15 @@ them). Bump a submodule and the pins together when a library changes API.
 
 ```
 Package.swift, ios/Sources/QRXCore     glyph parsing, BLUE protocol, GlyphLookup (fragment resolution, max 16 documents);
-                                       29 tests run on Linux
+                                       38 tests run on Linux
 ios/project.yml                        XcodeGen spec: packages, frameworks, Info.plist properties, signing team
 ios/QRX.xcodeproj                      generated; `xcodegen generate` from ios/ (in this container:
                                        USER=builder LOGNAME=builder /opt/toolchains/xcodegen-src/.build/release/xcodegen generate)
-ios/QRX                                AppModel, AR/ (ARGlyphView, BarcodeDetector, GlyphFactory, GlyphPlane), Bluetooth/,
+ios/QRX                                AppModel, ContentView (chrome, toasts, KeyboardBar, settings sheet),
+                                       AR/ (ARGlyphView, BarcodeDetector, GlyphFactory, GlyphPlane), Bluetooth/,
                                        Services/ (AIService = TokenXModel + TokenXMindProvider, SpeechInput, AppServices),
                                        Views/ (ChromeView with push-to-talk, GlyphContentView, SettingsView)
+ios/QRXTests                           16 app tests, run in the simulator (AppModel, GlyphFactory, GlyphPlane, SpeechInput, GATT flow)
 android/qrx-core                       Kotlin mirror of QRXCore with tests
 android/qrx-shared                     GlyphSession, scan/ (CameraX + ML Kit), ui/ (GlyphContent, SettingsSheet, ChromeBar),
                                        blue/ (GATT server, client, permissions), ai/AiService, speech/SpeechInput
@@ -58,10 +60,16 @@ android/quest                          Quest app (Meta Spatial SDK, targetSdk 32
 ## Build and test
 
 ```
-cd ios && swift test                                   # QRXCore on Linux
+swift test                                             # QRXCore, from the repo root (Package.swift is there); also runs on Linux.
+                                                       # It leaves an untracked Package.resolved at the root: delete it.
 cd android && ./gradlew build                          # 51 JVM tests, app-debug.apk and quest-debug.apk under */build/outputs/apk/debug
 cd ios && xcodegen generate                            # after editing project.yml
 xcodebuild -project ios/QRX.xcodeproj -scheme QRX -destination 'generic/platform=iOS Simulator' build   # Mac only
+xcodebuild test -project ios/QRX.xcodeproj -scheme QRX -destination 'platform=iOS Simulator,name=iPhone 17' \
+  -derivedDataPath ios/build/DerivedData CODE_SIGNING_ALLOWED=NO                                         # app tests, Mac only
+xcodebuild build -project ios/QRX.xcodeproj -scheme QRX -destination 'generic/platform=iOS' -derivedDataPath ios/build/DerivedData
+xcrun devicectl device install app --device <udid> ios/build/DerivedData/Build/Products/Debug-iphoneos/QRX.app
+xcrun devicectl device process launch --device <udid> net.bcl.qrx                                        # phone must be unlocked
 ```
 
 The iOS app only builds on a Mac. In a Linux session, parse-check edited app
@@ -84,7 +92,44 @@ Install APKs with `adb install -r`; the Quest needs developer mode.
   LED board client that drove the Bluetooth layer). Nothing under it may be referenced from
   the apps, the docs or the settings screens.
 
+## How the iOS app fits together
+
+- Lookup: `GlyphLookup` fetches only `http(s)` and `blue` URLs, for the document and for its `$ref`
+  fragments; anything else (`file:`, a relative reference with no base) fails without a request.
+  A payload's `url:` header takes any text, so the scheme check is in the lookup, not the parser.
+  A request in flight holds the lookup until it answers.
+- Payload: a body that is only a URL line is the location (size, blank line, URL is a valid layout).
+  An inline document after only `size:` lines is the body.
+- A code is registered for tracking as soon as it is seen; its document arrives later. The detector
+  then calls `barcodeDetector(_:resolved:)` and `GlyphFactory.refresh` refills the node ARKit already
+  holds. A failed lookup carries its reason (`BarcodeResult.error`) onto the placeholder card.
+- "Forget" is `AppModel.forgetCount`; `ARGlyphView.Coordinator.forgetIfAsked` resets the detector and
+  `GlyphFactory.reset()` (hosted views, players, scenes). Do not infer it from `foundGlyphs` being
+  empty: that is also true for a moment on every new code.
+- The SwiftUI views on glyph planes (forms, buttons) are SceneKit materials and take their own touches.
+  Any gesture recognizer on the AR view must not cancel or delay touches (`cancelsTouchesInView = false`),
+  or forms stop responding; that is how it broke when the JsonScene tap recognizer was added.
+- Typing: `KeyboardBar` in `ContentView` shows Done above the keyboard whenever it is up. Fields live
+  on a plane, so there is no other way to give the keyboard up.
+- The chrome and settings read speech and Bluetooth state through `AppModel`, which re-publishes
+  their changes. A new service whose state the chrome shows needs the same forwarding.
+- Speech switches the audio session to record-only while listening and puts back what it found when
+  listening stops; `GlyphFactory.resumeVideo()` then restarts the video players.
+- BLUE: `BlueAssembler.append` returns every message a chunk completed. `BlueOutbox` keeps response
+  chunks per client; the GATT server notifies only the central that asked.
+- Not mirrored on Android yet (iOS and QRXCore only): the `:fixed` size split and large-value
+  formatting in `GlyphSize`, the fetch scheme check, the URL-after-a-blank-line rule, the assembler
+  returning several messages, and the per-client outbox. The Android GATT server and lookup have not
+  been checked for the same faults.
+
 ## Gotchas
+
+- The iOS Simulator has no camera, so no code is ever tracked, and it cannot draw a SwiftUI view as a
+  SceneKit material at all (Metal aborts in `SCNTextureCoreAnimationSource`). Glyph planes, touch on
+  forms and anything ARKit need a phone. `GlyphFactory.node(physical:result:)` is the seam the
+  simulator tests use; they never render.
+- `xcodegen` is not installed on the owner's Mac. Test files added since were put into
+  `project.pbxproj` by hand; a regenerate picks them up from their folders.
 
 - `android/settings.gradle.kts` includes the four library builds with explicit names; the
   libraries skip their own includes when they have a parent build.

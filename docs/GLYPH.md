@@ -65,7 +65,9 @@ A document may include shared pieces with JsonUI
 `_ui.fragments.name`, or a whole file. Relative references resolve against
 the document's own URL, `blue://device/path` references are served by the
 BLUE peer, and QRX fetches every referenced document (at most 16) before it
-parses the glyph, so renderers only ever see plain JSON.
+parses the glyph, so renderers only ever see plain JSON. Only `http(s)://` and
+`blue://` are fetched, for the document and for its fragments; a reference to
+anything else (a `file://` URL, say) fails the lookup.
 
 ## Glyph documents
 
