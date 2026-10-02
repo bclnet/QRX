@@ -28,7 +28,10 @@ final class BluePeripheral: NSObject, ObservableObject {
     private var service: CBMutableService?
     private var responseCharacteristic: CBMutableCharacteristic?
     private var assemblers: [UUID: BlueAssembler] = [:]
-    private var outgoing: [Data] = []
+    /// Response chunks by the central that asked; a response is only ever sent to that central.
+    private var outbox = BlueOutbox<UUID>()
+    /// The centrals subscribed to the response characteristic.
+    private var subscribers: [UUID: CBCentral] = [:]
     private var isAdvertising = false
     private var wantsStart = false
 
@@ -75,15 +78,16 @@ final class BluePeripheral: NSObject, ObservableObject {
         requestCount += 1
         let response = router.handle(text: text)
         let mtu = central.maximumUpdateValueLength + 3
-        outgoing.append(contentsOf: BlueFramer.frames(for: response.text, mtu: mtu))
+        outbox.enqueue(BlueFramer.frames(for: response.text, mtu: mtu), for: central.identifier)
         flush()
     }
 
     private func flush() {
         guard let characteristic = responseCharacteristic else { return }
-        while let frame = outgoing.first {
-            guard manager.updateValue(frame, for: characteristic, onSubscribedCentrals: nil) else { return } // retried from peripheralManagerIsReady
-            outgoing.removeFirst()
+        let subscribers = self.subscribers, manager = self.manager
+        outbox.flush(to: Set(subscribers.keys)) { id, frame in
+            guard let central = subscribers[id] else { return true }
+            return manager.updateValue(frame, for: characteristic, onSubscribedCentrals: [central]) // false: retried from peripheralManagerIsReady
         }
     }
 }
@@ -105,11 +109,21 @@ extension BluePeripheral: CBPeripheralManagerDelegate {
     }
 
     nonisolated func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
-        Task { @MainActor in self.subscriberCount += 1; self.assemblers[central.identifier] = BlueAssembler() }
+        Task { @MainActor in
+            self.subscribers[central.identifier] = central
+            self.subscriberCount = self.subscribers.count
+            self.assemblers[central.identifier] = BlueAssembler()
+            self.flush()
+        }
     }
 
     nonisolated func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
-        Task { @MainActor in self.subscriberCount = max(0, self.subscriberCount - 1); self.assemblers.removeValue(forKey: central.identifier) }
+        Task { @MainActor in
+            self.subscribers.removeValue(forKey: central.identifier)
+            self.subscriberCount = self.subscribers.count
+            self.assemblers.removeValue(forKey: central.identifier)
+            self.outbox.remove(central.identifier)
+        }
     }
 
     nonisolated func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
@@ -122,7 +136,7 @@ extension BluePeripheral: CBPeripheralManagerDelegate {
                 let assembler = self.assemblers[request.central.identifier] ?? BlueAssembler()
                 self.assemblers[request.central.identifier] = assembler
                 do {
-                    if let text = try assembler.append(data) { self.handle(text, from: request.central) }
+                    for text in try assembler.append(data) { self.handle(text, from: request.central) }
                     peripheral.respond(to: request, withResult: .success)
                 } catch {
                     peripheral.respond(to: request, withResult: .invalidAttributeValueLength)
@@ -132,9 +146,9 @@ extension BluePeripheral: CBPeripheralManagerDelegate {
     }
 
     nonisolated func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
-        // Reads return the next pending chunk, for centrals that cannot subscribe.
+        // Reads return the reader's next pending chunk, for centrals that cannot subscribe.
         Task { @MainActor in
-            request.value = self.outgoing.isEmpty ? Data() : self.outgoing.removeFirst()
+            request.value = self.outbox.next(for: request.central.identifier) ?? Data()
             peripheral.respond(to: request, withResult: .success)
         }
     }

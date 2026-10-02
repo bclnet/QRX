@@ -55,6 +55,8 @@ final class BlueCentral: NSObject, ObservableObject, BlueTransport {
     }
     private var pending: Pending?
     private var connectTarget: String?
+    /// True while a scan was started to find a request's device, as opposed to from the settings screen.
+    private var scanningForRequest = false
     var timeout: TimeInterval = 15
 
     private let serviceUUID = CBUUID(string: BlueUUIDs.service)
@@ -72,6 +74,7 @@ final class BlueCentral: NSObject, ObservableObject, BlueTransport {
     func stopScan() {
         manager.stopScan()
         isScanning = false
+        scanningForRequest = false
         if state == "scanning" { state = "idle" }
     }
 
@@ -95,9 +98,15 @@ final class BlueCentral: NSObject, ObservableObject, BlueTransport {
             if let known = peripherals.values.first(where: { matches($0, device) }) {
                 connect(known)
             } else {
-                startScan()
+                scanForRequest()
             }
         }
+    }
+
+    private func scanForRequest() {
+        guard !isScanning else { return }
+        startScan()
+        scanningForRequest = isScanning
     }
 
     private func matches(_ peripheral: CBPeripheral, _ device: String) -> Bool {
@@ -128,6 +137,14 @@ final class BlueCentral: NSObject, ObservableObject, BlueTransport {
         guard let pending = pending else { return }
         pending.timeout?.cancel()
         self.pending = nil
+        // The request is over, answered or not: stop looking for its device and give up a connection
+        // that never completed, so a code for an absent device does not leave the radio busy.
+        connectTarget = nil
+        if scanningForRequest { scanningForRequest = false; stopScan() }
+        if let peripheral = connected, peripheral.state == .connecting {
+            manager.cancelPeripheralConnection(peripheral)
+            connected = nil
+        }
         state = "idle"
         pending.completion(result)
     }
@@ -139,7 +156,7 @@ extension BlueCentral: CBCentralManagerDelegate, CBPeripheralDelegate {
     nonisolated func centralManagerDidUpdateState(_ central: CBCentralManager) {
         Task { @MainActor in
             self.state = "Bluetooth is \(central.state.description)"
-            if central.state == .poweredOn, self.pending != nil { self.startScan() }
+            if central.state == .poweredOn, self.pending != nil { self.scanForRequest() }
             if central.state != .poweredOn { self.isConnected = false; self.fail(BlueCentralError.poweredOff) }
         }
     }
@@ -212,7 +229,7 @@ extension BlueCentral: CBCentralManagerDelegate, CBPeripheralDelegate {
         guard let data = characteristic.value else { return }
         Task { @MainActor in
             do {
-                if let text = try self.assembler.append(data) {
+                if let text = try self.assembler.append(data).first {
                     self.finish(Result { try BlueResponse(text: text) })
                 }
             } catch {

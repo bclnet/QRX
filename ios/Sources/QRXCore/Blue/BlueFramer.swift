@@ -48,25 +48,28 @@ public final class BlueAssembler {
 
     public var isIdle: Bool { buffer.isEmpty && expected == nil }
 
-    /// Appends a chunk; returns the completed message text when the announced length is reached.
+    /// Appends a chunk; returns the messages it completed, in order. Usually none or one, but a chunk
+    /// can carry the end of one message and all of the next.
     @discardableResult
-    public func append(_ chunk: Data) throws -> String? {
+    public func append(_ chunk: Data) throws -> [String] {
         buffer.append(chunk)
-        if expected == nil, buffer.count >= BlueFramer.headerSize {
-            let length = buffer.prefix(BlueFramer.headerSize).withUnsafeBytes { $0.loadUnaligned(as: UInt32.self) }
-            let value = Int(UInt32(littleEndian: length))
-            guard value <= BlueFramer.maxMessageSize else {
-                reset()
-                throw BlueAssemblerError.messageTooLarge(value)
+        var messages: [String] = []
+        while true {
+            if expected == nil, buffer.count >= BlueFramer.headerSize {
+                let length = buffer.prefix(BlueFramer.headerSize).withUnsafeBytes { $0.loadUnaligned(as: UInt32.self) }
+                let value = Int(UInt32(littleEndian: length))
+                guard value <= BlueFramer.maxMessageSize else {
+                    reset()
+                    throw BlueAssemblerError.messageTooLarge(value)
+                }
+                expected = value
             }
-            expected = value
+            guard let length = expected, buffer.count >= BlueFramer.headerSize + length else { return messages }
+            let end = BlueFramer.headerSize + length
+            messages.append(String(decoding: buffer.subdata(in: BlueFramer.headerSize..<end), as: UTF8.self))
+            buffer = buffer.subdata(in: end..<buffer.count)
+            expected = nil
         }
-        guard let expected = expected, buffer.count >= BlueFramer.headerSize + expected else { return nil }
-        let payload = buffer.subdata(in: BlueFramer.headerSize..<(BlueFramer.headerSize + expected))
-        let remainder = buffer.subdata(in: (BlueFramer.headerSize + expected)..<buffer.count)
-        reset()
-        if !remainder.isEmpty { buffer = remainder; _ = try? append(Data()) }
-        return String(decoding: payload, as: UTF8.self)
     }
 
     public func reset() {
