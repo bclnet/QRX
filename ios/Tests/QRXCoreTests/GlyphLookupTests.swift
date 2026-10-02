@@ -111,6 +111,18 @@ final class GlyphFragmentTests: XCTestCase {
         XCTAssertFalse(json.value.hasFragmentReferences)
     }
 
+    // A lookup nobody else holds still answers: the request keeps it alive until it completes.
+    func testLookupAnswersWhenTheCallerLetsGoOfIt() {
+        let fetcher = FakeFetcher()
+        fetcher.responses[URL(string: "https://x/a.json")!] = .success(Data(##"{"_button":{},"text":{"$ref":"b.json#/text"}}"##.utf8))
+        fetcher.responses[URL(string: "https://x/b.json")!] = .success(Data(#"{"text":"Hi"}"#.utf8))
+        var document: GlyphDocument?
+        let done = expectation(description: "lookup")
+        GlyphLookup(fetcher: fetcher).lookup(GlyphBarcode(payload: "https://x/a.json")) { document = try? $0.get(); done.fulfill() }
+        wait(for: [done], timeout: 2)
+        XCTAssertEqual(document?.content, .button(text: "Hi", action: nil))
+    }
+
     func testMissingFragmentFails() {
         let fetcher = FakeFetcher()
         fetcher.responses[URL(string: "https://x/a.json")!] = .success(Data(##"{"_button":{},"text":{"$ref":"b.json#/text"}}"##.utf8))

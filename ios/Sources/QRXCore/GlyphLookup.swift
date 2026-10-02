@@ -92,8 +92,9 @@ public final class GlyphLookup {
         if let target = barcode.blueTarget {
             guard let blue = blue else { finish(.failure(GlyphLookupError.bluetoothUnavailable)); return }
             let base = URL(string: "blue://\(target.device)\(target.path.hasPrefix("/") ? "" : "/")\(target.path)")
-            fetchBlue(target.path, device: target.device, blue: blue) { [weak self] result in
-                self?.resolve(json: result, base: base, completion: finish)
+            // Callbacks hold the lookup: a request in flight always answers, even if the caller let go of it.
+            fetchBlue(target.path, device: target.device, blue: blue) { result in
+                self.resolve(json: result, base: base, completion: finish)
             }
             return
         }
@@ -103,8 +104,8 @@ public final class GlyphLookup {
             finish(.failure(GlyphLookupError.unsupportedScheme(url.scheme ?? "")))
             return
         }
-        fetcher.fetch(url) { [weak self] result in
-            self?.resolve(json: result.map { String(decoding: $0, as: UTF8.self) }, base: url, completion: finish)
+        fetcher.fetch(url) { result in
+            self.resolve(json: result.map { String(decoding: $0, as: UTF8.self) }, base: url, completion: finish)
         }
     }
 
@@ -164,8 +165,7 @@ public final class GlyphLookup {
                 group.leave()
             }
         }
-        group.notify(queue: .global()) { [weak self] in
-            guard let self = self else { return }
+        group.notify(queue: .global()) {
             if let failure = failure { completion(.failure(failure)); return }
             self.resolve(value, base: base, resolver: resolver, fetched: fetched + missing.count, completion: completion)
         }
