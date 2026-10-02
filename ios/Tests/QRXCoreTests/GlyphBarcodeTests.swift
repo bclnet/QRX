@@ -17,9 +17,30 @@ final class GlyphBarcodeTests: XCTestCase {
 
         let c = GlyphBarcode(payload: "size: 3x3\n        \nhttps://url.com\n")
         XCTAssertEqual(c.sizes[.normal], GlyphSize(string: "3x3"))
-        // A blank line after the headers ends them: the URL becomes the body.
-        XCTAssertNil(c.url)
-        XCTAssertEqual(c.body, "https://url.com")
+        XCTAssertEqual(c.url, URL(string: "https://url.com"))
+        XCTAssertFalse(c.multi)
+        XCTAssertNil(c.body)
+    }
+
+    // A blank line ends the headers, but a body that is only a URL line is still the location.
+    func testUrlAfterBlankLine() {
+        let blue = GlyphBarcode(payload: "size: *3\n\nblue://Sky's Phone/glyph/ui-login\n")
+        XCTAssertEqual(blue.blueTarget?.device, "Sky's Phone")
+        XCTAssertNil(blue.body)
+        XCTAssertNil(blue.inlineDocument)
+
+        // An inline document after only `size:` lines stays the body.
+        let inline = GlyphBarcode(payload: "size: *2\n\n{\"_button\":{},\"text\":\"Inline\"}")
+        XCTAssertNil(inline.url)
+        XCTAssertEqual(inline.inlineDocument, #"{"_button":{},"text":"Inline"}"#)
+
+        // So does a body with more than the URL, and a URL body when the headers already gave one.
+        let text = GlyphBarcode(payload: "size: *2\n\nhttps://url.com\nand more")
+        XCTAssertNil(text.url)
+        XCTAssertEqual(text.body, "https://url.com\nand more")
+        let both = GlyphBarcode(payload: "https://a.com\n\nhttps://b.com")
+        XCTAssertEqual(both.url, URL(string: "https://a.com"))
+        XCTAssertEqual(both.body, "https://b.com")
     }
 
     func testHeadersSizesAndInlineDocument() {

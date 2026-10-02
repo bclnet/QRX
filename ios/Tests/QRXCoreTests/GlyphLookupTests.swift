@@ -68,6 +68,18 @@ final class GlyphLookupTests: XCTestCase {
         GlyphLookup(fetcher: FakeFetcher()).lookup(GlyphBarcode(payload: "blue://*/glyph/x")) { if case .failure(let e) = $0 { unavailable = e } }
         XCTAssertEqual("\(unavailable!)", "Bluetooth is not available for blue:// glyphs")
     }
+
+    // The `url:` header takes any text, so the document's own scheme is checked before it is fetched.
+    func testOnlyHttpAndBlueDocumentsAreFetched() {
+        for location in ["file:///etc/hosts", "FILE:///etc/hosts", "ftp://x/a.json", "a.json"] {
+            let fetcher = FakeFetcher()
+            let lookup = GlyphLookup(fetcher: fetcher)
+            var failure: Error?
+            lookup.lookup(GlyphBarcode(payload: "url: \(location)")) { if case .failure(let e) = $0 { failure = e } }
+            XCTAssertTrue("\(failure.map { "\($0)" } ?? "no failure")".contains("are not fetched"), location)
+            XCTAssertEqual(fetcher.calls, 0, location)
+        }
+    }
 }
 
 final class GlyphFragmentTests: XCTestCase {
@@ -108,6 +120,26 @@ final class GlyphFragmentTests: XCTestCase {
         lookup.lookup(GlyphBarcode(payload: "https://x/a.json")) { if case .failure(let e) = $0 { failure = e }; done.fulfill() }
         wait(for: [done], timeout: 5)
         XCTAssertTrue("\(failure!)".contains("fragments: https://x/b.json"))
+    }
+
+    // A scanned code must not make the app read local files, or anything else that is not http(s) or blue.
+    func testOnlyHttpAndBlueFragmentsAreFetched() {
+        for ref in ["file:///etc/hosts#/text", "FILE:///etc/hosts", "ftp://x/a.json", "data:application/json,%7B%7D", "a.json#/text"] {
+            let fetcher = FakeFetcher()
+            fetcher.responses[URL(string: "https://x/a.json")!] = .success(Data("{\"_button\":{},\"text\":{\"$ref\":\"\(ref)\"}}".utf8))
+            let lookup = GlyphLookup(fetcher: fetcher)
+            let inline = GlyphBarcode(payload: "size: *2\n\n{\"_button\":{},\"text\":{\"$ref\":\"\(ref)\"}}")
+            // Inline (no base URL) for every reference; through a fetched document for the absolute ones.
+            for barcode in [inline] + (ref.contains(":") ? [GlyphBarcode(payload: "https://x/a.json")] : []) {
+                var failure: Error?
+                let before = fetcher.calls
+                let done = expectation(description: "lookup \(ref)")
+                lookup.lookup(barcode) { if case .failure(let e) = $0 { failure = e }; done.fulfill() }
+                wait(for: [done], timeout: 5)
+                XCTAssertTrue("\(failure.map { "\($0)" } ?? "no failure")".contains("references are not fetched"), ref)
+                XCTAssertEqual(fetcher.calls - before, barcode.url == nil ? 0 : 1, "the fragment is never requested: \(ref)")
+            }
+        }
     }
 
     func testInlineDocumentsResolveLocalFragments() {

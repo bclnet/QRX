@@ -65,6 +65,11 @@ public struct GlyphBarcode: Equatable, Hashable {
         if headers.isEmpty && sizes.isEmpty && body == nil && !payload.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             body = payload.trimmingCharacters(in: .whitespacesAndNewlines)
         }
+        // A body that is only a URL line is the location, written after a blank line: a URL is never a document.
+        if headers["url"] == nil, let text = body, !text.contains(where: \.isNewline), GlyphBarcode.isURL(text) {
+            headers["url"] = text
+            body = nil
+        }
         self.headers = headers
         self.sizes = sizes
         self.location = headers["url"]

@@ -34,7 +34,8 @@ Lines, in any order, until the first blank line:
 
 After the first blank line, the rest of the payload is the *body*. When the
 payload has no URL, the body is parsed as the glyph document itself, which
-lets a QR code work with no network at all.
+lets a QR code work with no network at all. A body that is only a URL line
+is taken as the URL, so the URL may also follow a blank line.
 
 A payload that is not in this format (a plain URL, plain text) is still
 usable: a bare `http(s)://` line is a URL, and anything else is shown as text.

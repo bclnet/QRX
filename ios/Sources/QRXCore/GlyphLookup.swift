@@ -21,6 +21,7 @@ public enum GlyphLookupError: Error, CustomStringConvertible {
     case blue(status: Int, message: String?)
     case fragments(String)
     case tooManyFragments
+    case unsupportedScheme(String)
 
     public var description: String {
         switch self {
@@ -30,6 +31,7 @@ public enum GlyphLookupError: Error, CustomStringConvertible {
         case .blue(let status, let message): return "BLUE \(status)\(message.map { ": " + $0 } ?? "")"
         case .fragments(let detail): return "fragments: \(detail)"
         case .tooManyFragments: return "too many fragment documents"
+        case .unsupportedScheme(let scheme): return "\(scheme.isEmpty ? "relative" : scheme) references are not fetched"
         }
     }
 }
@@ -96,6 +98,11 @@ public final class GlyphLookup {
             return
         }
         guard let url = barcode.url else { finish(.failure(GlyphLookupError.noContent)); return }
+        // A `url:` header takes any text; only http(s) goes to the fetcher (see `fetchDocument`).
+        guard let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https" else {
+            finish(.failure(GlyphLookupError.unsupportedScheme(url.scheme ?? "")))
+            return
+        }
         fetcher.fetch(url) { [weak self] result in
             self?.resolve(json: result.map { String(decoding: $0, as: UTF8.self) }, base: url, completion: finish)
         }
@@ -113,13 +120,17 @@ public final class GlyphLookup {
     }
 
     /// Fetches one fragment document: `http(s)` through the fetcher, `blue://device/path` through the transport.
+    /// Nothing else is fetched: the reference comes from a scanned code, and URLSession would read `file://`.
     private func fetchDocument(_ url: URL, completion: @escaping (Result<JsonValue, Error>) -> Void) {
         let parse: (Result<String, Error>) -> Void = { result in completion(result.flatMap { text in Result { try JsonValue.parse(text) } }) }
-        if url.scheme == "blue" {
+        switch url.scheme?.lowercased() {
+        case "blue":
             guard let blue = blue else { completion(.failure(GlyphLookupError.bluetoothUnavailable)); return }
             fetchBlue(url.path, device: url.host ?? "*", blue: blue, completion: parse)
-        } else {
+        case "http", "https":
             fetcher.fetch(url) { parse($0.map { String(decoding: $0, as: UTF8.self) }) }
+        default:
+            completion(.failure(GlyphLookupError.unsupportedScheme(url.scheme ?? "")))
         }
     }
 

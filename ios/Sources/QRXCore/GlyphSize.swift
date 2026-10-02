@@ -123,11 +123,12 @@ public struct GlyphSize: Equatable, Hashable, CustomStringConvertible, Codable {
     public init?(string s: String) {
         let text = s.trimmingCharacters(in: .whitespaces)
         if text.isEmpty || text == "~" { self = .zero; return }
-        let parts = text.split(maxSplits: 1, omittingEmptySubsequences: false, whereSeparator: { $0 == "x" || $0 == "X" }).map(String.init)
+        // Take the selector off before splitting: ":fixed" has an "x" of its own.
+        let body = text.lastIndex(of: ":").map { text[..<$0] } ?? Substring(text)
+        let parts = body.split(maxSplits: 1, omittingEmptySubsequences: false, whereSeparator: { $0 == "x" || $0 == "X" }).map(String.init)
         guard let first = parts.first, let width = Dimension(string: first) else { return nil }
-        let last = parts.count > 1 ? parts[1] : first
-        guard let height = Dimension(string: last) else { return nil }
-        selector = GlyphSelector(parse: last)
+        guard let height = Dimension(string: parts.count > 1 ? parts[1] : first) else { return nil }
+        selector = GlyphSelector(parse: text)
         self.width = width
         self.height = height
     }
@@ -140,7 +141,8 @@ public struct GlyphSize: Equatable, Hashable, CustomStringConvertible, Codable {
     }
 
     static func clean(_ v: Double) -> String {
-        v.truncatingRemainder(dividingBy: 1) == 0 ? String(Int(v)) : String(v)
+        // Not through Int: a whole value can be larger than Int.max.
+        v.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", v) : String(v)
     }
 
     // MARK: - Codable (as the string form)

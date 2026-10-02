@@ -20,6 +20,9 @@ final class GlyphSizeTests: XCTestCase {
         ("*-1.2l-5.6x*+2.3b+5.3", .normal, D(multiple: true, value: -1.2, anchor: .start, offset: -5.6), D(multiple: true, value: 2.3, anchor: .end, offset: 5.3), "*-1.2l-5.6x*2.3b5.3"),
         ("10l10x20b10", .normal, D(multiple: false, value: 10, anchor: .start, offset: 10), D(multiple: false, value: 20, anchor: .end, offset: 10), "10l10x20b10"),
         ("*2x*3:focus", .focus, D(multiple: true, value: 2), D(multiple: true, value: 3), "*2x*3:focus"),
+        ("2x3:fixed", .fixed, D(multiple: false, value: 2), D(multiple: false, value: 3), "2x3:fixed"),
+        ("2:fixed", .fixed, D(multiple: false, value: 2), D(multiple: false, value: 2), "2x2:fixed"),
+        ("*2r1:fixed", .fixed, D(multiple: true, value: 2, anchor: .end, offset: 1), D(multiple: true, value: 2, anchor: .end, offset: 1), "*2r1x*2b1:fixed"),
     ]
 
     func testParsing() {
@@ -37,6 +40,14 @@ final class GlyphSizeTests: XCTestCase {
         XCTAssertNil(GlyphSize(string: "abc"))
         XCTAssertNil(GlyphSize(string: "1lx"))
         XCTAssertNil(GlyphSize(string: "1x2q3"))
+        XCTAssertNil(GlyphSize(string: ":fixed"))
+    }
+
+    // A whole value above Int.max still prints and reads back.
+    func testLargeValues() {
+        let size = GlyphSize(string: "99999999999999999999x-99999999999999999999b1")
+        XCTAssertEqual(size?.description, "100000000000000000000x-100000000000000000000b1")
+        XCTAssertEqual(size.flatMap { GlyphSize(string: $0.description) }, size)
     }
 
     func testResolve() {
