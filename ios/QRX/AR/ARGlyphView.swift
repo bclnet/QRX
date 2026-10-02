@@ -24,7 +24,13 @@ struct ARGlyphView: UIViewRepresentable {
         context.coordinator.view = view
         context.coordinator.factory.parent = view
         context.coordinator.run(with: [], options: [.resetTracking, .removeExistingAnchors])
-        view.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap(_:))))
+        // The glyph planes show SwiftUI views (forms, buttons) that take their own touches. This recognizer
+        // is only for JsonScene actors, so it listens without holding back or cancelling those touches.
+        let tap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap(_:)))
+        tap.cancelsTouchesInView = false
+        tap.delaysTouchesEnded = false
+        tap.delegate = context.coordinator
+        view.addGestureRecognizer(tap)
         UIApplication.shared.isIdleTimerDisabled = true
         return view
     }
@@ -39,7 +45,7 @@ struct ARGlyphView: UIViewRepresentable {
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    final class Coordinator: NSObject, ARSCNViewDelegate, BarcodeDetectorDelegate {
+    final class Coordinator: NSObject, ARSCNViewDelegate, BarcodeDetectorDelegate, UIGestureRecognizerDelegate {
         let model: AppModel
         let detector = BarcodeDetector()
         let factory: GlyphFactory
@@ -130,6 +136,10 @@ struct ARGlyphView: UIViewRepresentable {
         static func message(forFailure error: Error) -> String {
             if (error as? ARError)?.code == .cameraUnauthorized { return "QRX needs the camera. Allow it in Settings, under QRX." }
             return "AR stopped: \(error.localizedDescription)"
+        }
+
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
+            true
         }
 
         /// Taps on a JsonScene actor reach its scene; the SwiftUI planes handle their own touches.

@@ -2,7 +2,8 @@
 //  ContentView.swift
 //  QRX
 //
-//  The AR scene with the chrome overlaid, toasts, and the settings sheet.
+//  The AR scene with the chrome overlaid, toasts, the keyboard bar and the
+//  settings sheet.
 //
 
 import SwiftUI
@@ -15,6 +16,7 @@ struct ContentView: View {
             ARGlyphView()
                 .ignoresSafeArea()
             ChromeView()
+            KeyboardBar()
             if let toast = model.toast {
                 VStack {
                     Spacer()
@@ -30,5 +32,30 @@ struct ContentView: View {
         .sheet(isPresented: $model.showSettings) {
             SettingsView().environmentObject(model)
         }
+    }
+}
+
+/// A bar above the keyboard with Done, for typing into a form glyph. The fields live on a plane in the
+/// scene, where nothing else can give the keyboard up, and a number pad has no return key.
+struct KeyboardBar: View {
+    @State private var keyboardIsUp = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            if keyboardIsUp {
+                HStack {
+                    Spacer()
+                    Button("Done") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                    .font(.body.bold())
+                    .padding(.horizontal, 16).padding(.vertical, 10)
+                }
+                .background(.bar)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in keyboardIsUp = true }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in keyboardIsUp = false }
     }
 }
