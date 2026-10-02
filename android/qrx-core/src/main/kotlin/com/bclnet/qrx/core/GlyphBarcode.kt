@@ -53,6 +53,9 @@ class GlyphBarcode(val payload: String) {
         }
         if (plainText) { headers.clear(); sizes.clear(); body = payload.trim() }
         if (headers.isEmpty() && sizes.isEmpty() && body == null && payload.isNotBlank()) body = payload.trim()
+        // A body that is only a URL line is the location, written after a blank line: a URL is never a document.
+        val text = body
+        if (headers["url"] == null && text != null && '\n' !in text && isURL(text)) { headers["url"] = text; body = null }
         this.headers = headers
         this.sizes = sizes
         this.location = headers["url"]

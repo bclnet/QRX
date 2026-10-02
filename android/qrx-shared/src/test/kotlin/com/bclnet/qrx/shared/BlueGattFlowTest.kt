@@ -22,12 +22,12 @@ class BlueGattFlowTest {
         assertTrue(requestChunks.size > 1)
         val inbound = BlueAssembler()
         var text: String? = null
-        requestChunks.forEach { chunk -> inbound.append(chunk)?.let { text = it } }
+        requestChunks.forEach { chunk -> inbound.append(chunk).firstOrNull()?.let { text = it } }
         val response = service.router.handle(text!!)
         assertEquals(200, response.statusCode)
         val outbound = BlueAssembler()
         var responseText: String? = null
-        BlueFramer.frames(response.text, mtu).forEach { chunk -> outbound.append(chunk)?.let { responseText = it } }
+        BlueFramer.frames(response.text, mtu).forEach { chunk -> outbound.append(chunk).firstOrNull()?.let { responseText = it } }
         val parsed = BlueResponse.parse(responseText!!)
         assertEquals(GlyphContent.Button("Menu", null), GlyphDocument.parse(parsed.content!!).content)
     }

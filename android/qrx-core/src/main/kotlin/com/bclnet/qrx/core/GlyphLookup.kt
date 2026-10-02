@@ -27,6 +27,7 @@ sealed class GlyphLookupException(message: String) : Exception(message) {
     class Blue(val status: Int, val detail: String?) : GlyphLookupException("BLUE $status${detail?.let { ": $it" } ?: ""}")
     class Fragments(val detail: String) : GlyphLookupException("fragments: $detail")
     class TooManyFragments : GlyphLookupException("too many fragment documents")
+    class UnsupportedScheme(val scheme: String) : GlyphLookupException("${scheme.ifEmpty { "relative" }} references are not fetched")
 }
 
 /** Fetches bytes for an `http(s)://` URL. Called off the main thread. */
@@ -87,6 +88,9 @@ class GlyphLookup(
             return
         }
         val url = barcode.location ?: run { finish(Result.failure(GlyphLookupException.NoContent())); return }
+        // A `url:` header takes any text; only http(s) goes to the fetcher (see `fetchDocument`).
+        val scheme = url.substringBefore(':', "").lowercase()
+        if (scheme != "http" && scheme != "https") { finish(Result.failure(GlyphLookupException.UnsupportedScheme(scheme))); return }
         resolve(runCatching { String(fetcher.fetch(url), Charsets.UTF_8) }, runCatching { URI(url) }.getOrNull(), finish)
     }
 
@@ -101,14 +105,19 @@ class GlyphLookup(
         }
     }
 
-    /** Fetches one fragment document: `http(s)` through the fetcher, `blue://device/path` through the transport. */
+    /**
+     * Fetches one fragment document: `http(s)` through the fetcher, `blue://device/path` through the transport.
+     * Nothing else is fetched: the reference comes from a scanned code, and a fetcher may well read `file:`.
+     */
     private fun fetchDocument(url: URI, callback: (Result<JsonElement>) -> Unit) {
         val parse: (Result<String>) -> Unit = { result -> callback(result.mapCatching { parseJson(it) }) }
-        if (url.scheme == "blue") {
-            val transport = blue ?: run { callback(Result.failure(GlyphLookupException.BluetoothUnavailable())); return }
-            fetchBlue(url.path ?: "/", url.host ?: "*", transport, parse)
-        } else {
-            parse(runCatching { String(fetcher.fetch(url.toString()), Charsets.UTF_8) })
+        when (url.scheme?.lowercase()) {
+            "blue" -> {
+                val transport = blue ?: run { callback(Result.failure(GlyphLookupException.BluetoothUnavailable())); return }
+                fetchBlue(url.path ?: "/", url.host ?: "*", transport, parse)
+            }
+            "http", "https" -> parse(runCatching { String(fetcher.fetch(url.toString()), Charsets.UTF_8) })
+            else -> callback(Result.failure(GlyphLookupException.UnsupportedScheme(url.scheme ?: "")))
         }
     }
 

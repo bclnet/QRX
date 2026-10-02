@@ -160,7 +160,7 @@ class BlueGattServer(private val context: Context, private val adapter: Bluetoot
             }
             val assembler = assemblers.getOrPut(device.address) { BlueAssembler() }
             val status = try {
-                assembler.append(value)?.let { handle(device, it) }
+                for (text in assembler.append(value)) handle(device, text)
                 BluetoothGatt.GATT_SUCCESS
             } catch (e: Exception) {
                 BluetoothGatt.GATT_INVALID_ATTRIBUTE_LENGTH

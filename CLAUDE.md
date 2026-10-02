@@ -62,7 +62,9 @@ android/quest                          Quest app (Meta Spatial SDK, targetSdk 32
 ```
 swift test                                             # QRXCore, from the repo root (Package.swift is there); also runs on Linux.
                                                        # It leaves an untracked Package.resolved at the root: delete it.
-cd android && ./gradlew build                          # 51 JVM tests, app-debug.apk and quest-debug.apk under */build/outputs/apk/debug
+cd android && ./gradlew build                          # 43 JVM tests (32 core, 6 shared, 5 quest), app-debug.apk and quest-debug.apk
+                                                       # under */build/outputs/apk/debug; needs the third_party submodules
+                                                       # (`git submodule update --init`, also in a fresh worktree)
 cd ios && xcodegen generate                            # after editing project.yml
 xcodebuild -project ios/QRX.xcodeproj -scheme QRX -destination 'generic/platform=iOS Simulator' build   # Mac only
 xcodebuild test -project ios/QRX.xcodeproj -scheme QRX -destination 'platform=iOS Simulator,name=iPhone 17' \
@@ -117,10 +119,11 @@ Install APKs with `adb install -r`; the Quest needs developer mode.
   listening stops; `GlyphFactory.resumeVideo()` then restarts the video players.
 - BLUE: `BlueAssembler.append` returns every message a chunk completed. `BlueOutbox` keeps response
   chunks per client; the GATT server notifies only the central that asked.
-- Not mirrored on Android yet (iOS and QRXCore only): the `:fixed` size split and large-value
-  formatting in `GlyphSize`, the fetch scheme check, the URL-after-a-blank-line rule, the assembler
-  returning several messages, and the per-client outbox. The Android GATT server and lookup have not
-  been checked for the same faults.
+- Android mirrors the core fixes (`GlyphSize`, the fetch scheme check, the URL-after-a-blank-line rule,
+  `BlueAssembler` returning several messages) and the GATT client stops its scan when a request ends.
+  The rest is iOS only by nature: the Android UI is Compose state, so a glyph fills in and shows its
+  error on its own; its GATT server already queued per device; SpeechRecognizer does not take the
+  audio session; forms are ordinary views with the system keyboard.
 
 ## Gotchas
 

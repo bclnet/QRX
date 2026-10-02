@@ -65,6 +65,8 @@ class BlueGattClient(private val context: Context, private val adapter: Bluetoot
     private class Pending(val request: BlueRequest, val device: String, val callback: (Result<BlueResponse>) -> Unit, val timeout: Runnable)
     private var pending: Pending? = null
     private var connectTarget: String? = null
+    /** True while a scan was started to find a request's device, as opposed to from the settings screen. */
+    private var scanningForRequest = false
 
     fun startScan() {
         val scanner = adapter?.bluetoothLeScanner ?: run { state = "no Bluetooth adapter"; return }
@@ -80,6 +82,7 @@ class BlueGattClient(private val context: Context, private val adapter: Bluetoot
     fun stopScan() {
         if (isScanning) adapter?.bluetoothLeScanner?.stopScan(scanCallback)
         isScanning = false
+        scanningForRequest = false
         if (state == "scanning") state = "idle"
     }
 
@@ -109,7 +112,7 @@ class BlueGattClient(private val context: Context, private val adapter: Bluetoot
             connectTarget = device
             state = "looking for $device"
             val known = devices.values.firstOrNull { matches(it, device) }
-            if (known != null) connect(known) else startScan()
+            if (known != null) connect(known) else if (!isScanning) { startScan(); scanningForRequest = isScanning }
         }
     }
 
@@ -146,6 +149,11 @@ class BlueGattClient(private val context: Context, private val adapter: Bluetoot
         val p = pending ?: return
         main.removeCallbacks(p.timeout)
         pending = null
+        // The request is over, answered or not: stop looking for its device and give up a connection
+        // that never completed, so a code for an absent device does not leave the radio busy.
+        connectTarget = null
+        if (scanningForRequest) stopScan()
+        if (!isConnected) { gatt?.close(); gatt = null }
         state = "idle"
         p.callback(result)
     }
@@ -232,7 +240,7 @@ class BlueGattClient(private val context: Context, private val adapter: Bluetoot
     private fun received(value: ByteArray) {
         main.post {
             try {
-                assembler.append(value)?.let { text -> finish(runCatching { BlueResponse.parse(text) }) }
+                assembler.append(value).firstOrNull()?.let { text -> finish(runCatching { BlueResponse.parse(text) }) }
             } catch (e: Exception) {
                 fail(e)
             }

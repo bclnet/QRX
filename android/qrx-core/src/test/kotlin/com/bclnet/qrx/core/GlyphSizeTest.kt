@@ -26,6 +26,9 @@ class GlyphSizeTest {
         Case("*-1.2l-5.6x*+2.3b+5.3", GlyphSelector.Normal, Dimension(true, -1.2, Anchor.Start, -5.6), Dimension(true, 2.3, Anchor.End, 5.3), "*-1.2l-5.6x*2.3b5.3"),
         Case("10l10x20b10", GlyphSelector.Normal, Dimension(false, 10.0, Anchor.Start, 10.0), Dimension(false, 20.0, Anchor.End, 10.0), "10l10x20b10"),
         Case("*2x*3:focus", GlyphSelector.Focus, Dimension(true, 2.0), Dimension(true, 3.0), "*2x*3:focus"),
+        Case("2x3:fixed", GlyphSelector.Fixed, Dimension(false, 2.0), Dimension(false, 3.0), "2x3:fixed"),
+        Case("2:fixed", GlyphSelector.Fixed, Dimension(false, 2.0), Dimension(false, 2.0), "2x2:fixed"),
+        Case("*2r1:fixed", GlyphSelector.Fixed, Dimension(true, 2.0, Anchor.End, 1.0), Dimension(true, 2.0, Anchor.End, 1.0), "*2r1x*2b1:fixed"),
     )
 
     @Test
@@ -46,6 +49,15 @@ class GlyphSizeTest {
         assertNull(GlyphSize.parse("abc"))
         assertNull(GlyphSize.parse("1lx"))
         assertNull(GlyphSize.parse("1x2q3"))
+        assertNull(GlyphSize.parse(":fixed"))
+    }
+
+    // A whole value above Long.MAX_VALUE still prints and reads back.
+    @Test
+    fun largeValues() {
+        val size = GlyphSize.parse("99999999999999999999x-99999999999999999999b1")
+        assertEquals("100000000000000000000x-100000000000000000000b1", size?.description)
+        assertEquals(size, GlyphSize.parse(size!!.description))
     }
 
     @Test

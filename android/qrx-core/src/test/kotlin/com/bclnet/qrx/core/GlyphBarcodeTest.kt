@@ -24,8 +24,31 @@ class GlyphBarcodeTest {
 
         val c = GlyphBarcode("size: 3x3\n        \nhttps://url.com\n")
         assertEquals(GlyphSize.parse("3x3"), c.sizes[GlyphSelector.Normal])
-        assertNull(c.location)
-        assertEquals("https://url.com", c.body)
+        assertEquals("https://url.com", c.location)
+        assertFalse(c.multi)
+        assertNull(c.body)
+    }
+
+    // A blank line ends the headers, but a body that is only a URL line is still the location.
+    @Test
+    fun urlAfterBlankLine() {
+        val blue = GlyphBarcode("size: *3\n\nblue://Sky's Phone/glyph/ui-login\n")
+        assertEquals("Sky's Phone", blue.blueTarget?.device)
+        assertNull(blue.body)
+        assertNull(blue.inlineDocument)
+
+        // An inline document after only `size:` lines stays the body.
+        val inline = GlyphBarcode("size: *2\n\n{\"_button\":{},\"text\":\"Inline\"}")
+        assertNull(inline.location)
+        assertEquals("{\"_button\":{},\"text\":\"Inline\"}", inline.inlineDocument)
+
+        // So does a body with more than the URL, and a URL body when the headers already gave one.
+        val text = GlyphBarcode("size: *2\n\nhttps://url.com\nand more")
+        assertNull(text.location)
+        assertEquals("https://url.com\nand more", text.body)
+        val both = GlyphBarcode("https://a.com\n\nhttps://b.com")
+        assertEquals("https://a.com", both.location)
+        assertEquals("https://b.com", both.body)
     }
 
     @Test

@@ -109,14 +109,16 @@ data class GlyphSize(val selector: GlyphSelector = GlyphSelector.Normal, val wid
         fun parse(s: String): GlyphSize? {
             val text = s.trim()
             if (text.isEmpty() || text == "~") return zero
-            val parts = text.split('x', 'X', limit = 2)
+            // Take the selector off before splitting: ":fixed" has an "x" of its own.
+            val colon = text.lastIndexOf(':')
+            val parts = (if (colon < 0) text else text.substring(0, colon)).split('x', 'X', limit = 2)
             val width = Dimension.parse(parts[0]) ?: return null
-            val last = if (parts.size > 1) parts[1] else parts[0]
-            val height = Dimension.parse(last) ?: return null
-            return GlyphSize(GlyphSelector.parse(last), width, height)
+            val height = Dimension.parse(if (parts.size > 1) parts[1] else parts[0]) ?: return null
+            return GlyphSize(GlyphSelector.parse(text), width, height)
         }
 
-        internal fun clean(v: Double): String = if (v % 1.0 == 0.0) v.toLong().toString() else v.toString()
+        // Not through Long: a whole value can be larger than Long.MAX_VALUE.
+        internal fun clean(v: Double): String = if (v % 1.0 == 0.0) java.math.BigDecimal(v).toPlainString() else v.toString()
     }
 }
 

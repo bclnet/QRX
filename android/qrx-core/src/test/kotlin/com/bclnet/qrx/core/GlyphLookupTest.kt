@@ -115,6 +115,32 @@ class GlyphFragmentTest {
         assertTrue(result!!.exceptionOrNull()!!.message!!.contains("fragments: https://x/b.json"))
     }
 
+    // A scanned code must not make the app read local files, or anything else that is not http(s) or blue.
+    @Test fun onlyHttpAndBlueAreFetched() {
+        for (ref in listOf("file:///etc/hosts#/text", "FILE:///etc/hosts", "ftp://x/a.json", "a.json#/text")) {
+            val fetcher = FakeFetcher()
+            fetcher.responses["https://x/a.json"] = """{"_button":{},"text":{"${'$'}ref":"$ref"}}"""
+            val lookup = GlyphLookup(fetcher)
+            // Inline (no base URL) for every reference; through a fetched document for the absolute ones.
+            val inline = GlyphBarcode("size: *2\n\n{\"_button\":{},\"text\":{\"${'$'}ref\":\"$ref\"}}")
+            for (barcode in listOf(inline) + (if (':' in ref) listOf(GlyphBarcode("https://x/a.json")) else emptyList())) {
+                val before = fetcher.calls
+                var result: Result<GlyphDocument>? = null
+                lookup.lookup(barcode) { result = it }
+                assertTrue(ref, result!!.exceptionOrNull()!!.message!!.contains("references are not fetched"))
+                assertEquals("the fragment is never requested: $ref", if (barcode.location == null) 0 else 1, fetcher.calls - before)
+            }
+        }
+        // The `url:` header takes any text, so the document's own scheme is checked too.
+        for (location in listOf("file:///etc/hosts", "FILE:///etc/hosts", "ftp://x/a.json", "a.json")) {
+            val fetcher = FakeFetcher()
+            var result: Result<GlyphDocument>? = null
+            GlyphLookup(fetcher).lookup(GlyphBarcode("url: $location")) { result = it }
+            assertTrue(location, result!!.exceptionOrNull()!!.message!!.contains("are not fetched"))
+            assertEquals(location, 0, fetcher.calls)
+        }
+    }
+
     @Test fun inlineDocumentsResolveLocalFragments() {
         var result: Result<GlyphDocument>? = null
         GlyphLookup(FakeFetcher()).lookup(GlyphBarcode("size: *2\n\n{\"_ui\":{\"fragments\":{\"t\":\"Hi\"}},\"type\":\"Text\",\"text\":{\"${'$'}ref\":\"#t\"}}")) { result = it }

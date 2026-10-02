@@ -43,25 +43,30 @@ class BlueAssembler {
 
     val isIdle: Boolean get() = buffer.size() == 0 && expected == null
 
-    /** Appends a chunk; returns the completed message text when the announced length is reached. */
-    fun append(chunk: ByteArray): String? {
+    /**
+     * Appends a chunk; returns the messages it completed, in order. Usually none or one, but a chunk
+     * can carry the end of one message and all of the next.
+     */
+    fun append(chunk: ByteArray): List<String> {
         buffer.write(chunk)
-        val bytes = buffer.toByteArray()
-        if (expected == null && bytes.size >= BlueFramer.HEADER_SIZE) {
-            val value = (bytes[0].toInt() and 0xff) or ((bytes[1].toInt() and 0xff) shl 8) or ((bytes[2].toInt() and 0xff) shl 16) or ((bytes[3].toInt() and 0xff) shl 24)
-            if (value < 0 || value > BlueFramer.MAX_MESSAGE_SIZE) {
-                reset()
-                throw BlueAssemblerException("BLUE: message length $value exceeds ${BlueFramer.MAX_MESSAGE_SIZE}")
+        val messages = mutableListOf<String>()
+        while (true) {
+            val bytes = buffer.toByteArray()
+            if (expected == null && bytes.size >= BlueFramer.HEADER_SIZE) {
+                val value = (bytes[0].toInt() and 0xff) or ((bytes[1].toInt() and 0xff) shl 8) or ((bytes[2].toInt() and 0xff) shl 16) or ((bytes[3].toInt() and 0xff) shl 24)
+                if (value < 0 || value > BlueFramer.MAX_MESSAGE_SIZE) {
+                    reset()
+                    throw BlueAssemblerException("BLUE: message length $value exceeds ${BlueFramer.MAX_MESSAGE_SIZE}")
+                }
+                expected = value
             }
-            expected = value
+            val length = expected ?: return messages
+            val end = BlueFramer.HEADER_SIZE + length
+            if (bytes.size < end) return messages
+            messages.add(String(bytes, BlueFramer.HEADER_SIZE, length, Charsets.UTF_8))
+            reset()
+            buffer.write(bytes, end, bytes.size - end)
         }
-        val length = expected ?: return null
-        if (bytes.size < BlueFramer.HEADER_SIZE + length) return null
-        val payload = bytes.copyOfRange(BlueFramer.HEADER_SIZE, BlueFramer.HEADER_SIZE + length)
-        val remainder = bytes.copyOfRange(BlueFramer.HEADER_SIZE + length, bytes.size)
-        reset()
-        if (remainder.isNotEmpty()) { buffer.write(remainder); runCatching { append(ByteArray(0)) } }
-        return String(payload, Charsets.UTF_8)
     }
 
     fun reset() {

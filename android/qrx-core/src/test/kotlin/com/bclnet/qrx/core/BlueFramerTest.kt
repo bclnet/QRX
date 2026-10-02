@@ -13,7 +13,7 @@ class BlueFramerTest {
     private fun assemble(frames: List<ByteArray>): String? {
         val assembler = BlueAssembler()
         var result: String? = null
-        for (frame in frames) assembler.append(frame)?.let { result = it }
+        for (frame in frames) assembler.append(frame).lastOrNull()?.let { result = it }
         assertTrue(assembler.isIdle)
         return result
     }
@@ -43,8 +43,23 @@ class BlueFramerTest {
         val a = BlueFramer.frames("one", 100)[0]
         val b = BlueFramer.frames("two", 100)[0]
         val assembler = BlueAssembler()
-        assertEquals("one", assembler.append(a + b.copyOfRange(0, 2)))
-        assertEquals("two", assembler.append(b.copyOfRange(2, b.size)))
+        assertEquals(listOf("one"), assembler.append(a + b.copyOfRange(0, 2)))
+        assertEquals(listOf("two"), assembler.append(b.copyOfRange(2, b.size)))
+    }
+
+    // A chunk can hold more than one whole message; none of them may be dropped.
+    @Test
+    fun wholeMessagesInOneChunk() {
+        val chunk = listOf("one", "", "three").fold(ByteArray(0)) { all, text -> all + BlueFramer.frames(text, 100)[0] }
+        val assembler = BlueAssembler()
+        assertEquals(listOf("one", "", "three"), assembler.append(chunk))
+        assertTrue(assembler.isIdle)
+        // The tail of one message, a whole one, and the start of the next.
+        val a = BlueFramer.frames("alpha", 100)[0]; val b = BlueFramer.frames("beta", 100)[0]; val c = BlueFramer.frames("gamma", 100)[0]
+        assertEquals(emptyList<String>(), assembler.append(a.copyOfRange(0, 3)))
+        assertEquals(listOf("alpha", "beta"), assembler.append(a.copyOfRange(3, a.size) + b + c.copyOfRange(0, 5)))
+        assertEquals(listOf("gamma"), assembler.append(c.copyOfRange(5, c.size)))
+        assertTrue(assembler.isIdle)
     }
 
     @Test
