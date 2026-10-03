@@ -131,6 +131,12 @@ Install APKs with `adb install -r`; the Quest needs developer mode.
   SceneKit material at all (Metal aborts in `SCNTextureCoreAnimationSource`). Glyph planes, touch on
   forms and anything ARKit need a phone. `GlyphFactory.node(physical:result:)` is the seam the
   simulator tests use; they never render.
+- Android 16 warns "this app isn't 16 KB compatible" on every launch when any bundled native library
+  is aligned for 4 KB pages. Every `.so` in both APKs is 16 KB aligned now (JsonUI's QuickJS was the
+  one that was not); check a new native dependency with `llvm-objdump -p` (LOAD segments `2**14`).
+- Installing on a Samsung phone needs Auto Blocker off (Settings, Security and privacy) before USB or
+  wireless debugging can be enabled. With no data cable: `adb pair <ip:port> <code>` from the phone's
+  Wireless debugging screen, then `adb connect <ip:port>` (the connect port differs from the pairing one).
 - `xcodegen` is not installed on the owner's Mac. Test files added since were put into
   `project.pbxproj` by hand; a regenerate picks them up from their folders.
 
